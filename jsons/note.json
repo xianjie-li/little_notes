@@ -1,0 +1,9 @@
+{
+  "id": 0,
+  "categoryId": 0,
+  "noteBookId": 0,
+  "money": 0,
+  "type": "@enum:decrease,increase",
+  "create_date": "2020-12-12 15:25:12",
+  "remark?": "备注内容"
+}
