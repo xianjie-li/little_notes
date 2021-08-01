@@ -7,7 +7,7 @@ class HomeTitleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: Scaffold.of(context).openDrawer,
       child: Row(
         children: [
           Image.asset(
