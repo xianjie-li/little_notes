@@ -9,6 +9,7 @@ class NoteBook extends StatelessWidget {
   // 显示添加按钮
   final bool? isAddButton;
   final bool? selected;
+  final GestureTapCallback? onTap;
 
   const NoteBook({
     Key? key,
@@ -18,12 +19,9 @@ class NoteBook extends StatelessWidget {
     this.color = Colors.white,
     this.isAddButton = false,
     this.selected = false,
+    this.onTap,
   }) : super(key: key);
-  /*
-  * TODO: 点击选择
-  * 账本名
-  * 余额/预算: 1231
-  * */
+
   @override
   Widget build(BuildContext context) {
 
@@ -33,7 +31,7 @@ class NoteBook extends StatelessWidget {
           color: color,
           elevation: 2,
           child: InkWell(
-            onTap: () {},
+            onTap: onTap,
             child: buildMain(),
           ),
         ),
