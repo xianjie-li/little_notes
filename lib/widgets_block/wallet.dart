@@ -11,10 +11,10 @@ class Wallet extends StatelessWidget {
       children: [
         Image.asset(
           'lib/assets/wallet.png',
-          width: 140,
+          height: 120,
         ),
         Positioned(
-          right: 44,
+          right: 48,
           top: 36,
           child: Transform(
             transform: Matrix4.skewX(0.1)..rotateZ(-(pi / 14)),

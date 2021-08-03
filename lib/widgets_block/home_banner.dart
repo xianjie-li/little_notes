@@ -22,7 +22,7 @@ class HomeBanner extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                top: 72,
+                top: 44,
                 left: StyleVars.paddingLG,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

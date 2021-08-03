@@ -48,23 +48,23 @@ class _AddBookState extends State<AddBook> {
                 InputDecorator(
                   decoration: InputDecoration(
                       labelText: '侧重内容',
-                      helperText: '日常开支等仅注重流水的账本选择预算，存钱等对余额较敏感的账本选择余额',
+                      helperText: '控制要在页面中着重显示的内容',
                       helperMaxLines: 2,
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 10)),
+                          EdgeInsets.symmetric(horizontal: StyleVars.padding, vertical: StyleVars.paddingLG)),
                   child: Row(
                     children: [
                       Radio(
                         value: '1',
-                        groupValue: ['1', '2'],
+                        groupValue: '1',
                         onChanged: (value) {},
                         visualDensity: VisualDensity.compact,
                       ),
                       Text('预算'),
                       Radio(
-                        value: '1',
-                        groupValue: ['1', '2'],
+                        value: '2',
+                        groupValue: '1',
                         onChanged: (value) {},
                         visualDensity: VisualDensity.compact,
                       ),

@@ -1,7 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:little_notes/pages/books.dart';
 import 'package:little_notes/style/style_vars.dart';
-import 'package:little_notes/widgets/node_book.dart';
 import 'package:little_notes/widgets/time_list_item.dart';
 import 'package:little_notes/widgets/time_list_title.dart';
 import 'package:little_notes/widgets_block/home_app_bar.dart';
@@ -21,6 +22,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
         drawer: Drawer(
           child: Books(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Transform.rotate(angle: pi / 2, child: Image.asset('lib/assets/twemoji/270f.png', width: 30,),),
+          onPressed: () {  },
+          backgroundColor: StyleVars.theme,
         ),
         body: CustomScrollView(
           slivers: [
