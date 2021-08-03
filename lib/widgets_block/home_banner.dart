@@ -4,11 +4,15 @@ import 'count_fields.dart';
 import 'wallet.dart';
 import 'entrys.dart';
 
+/* 首页banner，其父级树中必须包含SliverAppBar */
 class HomeBanner extends StatelessWidget {
   const HomeBanner({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SliverAppBar? sAppBar = context.findAncestorWidgetOfExactType<SliverAppBar>();
+    var appBarHeight = sAppBar?.toolbarHeight ?? 0;
+
     return FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         background: Container(
@@ -22,7 +26,7 @@ class HomeBanner extends StatelessWidget {
           child: Stack(
             children: [
               Positioned(
-                top: 44,
+                top: appBarHeight + MediaQuery.of(context).padding.top / 2 /*  appBar高度加顶栏的一半 */,
                 left: StyleVars.paddingLG,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

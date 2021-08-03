@@ -51,8 +51,9 @@ class _AddBookState extends State<AddBook> {
                       helperText: '控制要在页面中着重显示的内容',
                       helperMaxLines: 2,
                       border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: StyleVars.padding, vertical: StyleVars.paddingLG)),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: StyleVars.padding,
+                          vertical: StyleVars.paddingLG)),
                   child: Row(
                     children: [
                       Radio(
@@ -107,9 +108,10 @@ class _AddBookState extends State<AddBook> {
                   children: [
                     Expanded(
                         child: ElevatedButton(
-                          style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all(Size.fromHeight(50)),
-                          ),
+                            style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all(
+                                  Size.fromHeight(50)),
+                            ),
                             onPressed: () {
                               print(_formKey.currentState?.validate());
                             },

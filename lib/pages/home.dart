@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:little_notes/pages/add_note.dart';
 import 'package:little_notes/pages/books.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/time_list_item.dart';
@@ -25,7 +26,9 @@ class _HomeState extends State<Home> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Transform.rotate(angle: pi / 2, child: Image.asset('lib/assets/twemoji/270f.png', width: 30,),),
-          onPressed: () {  },
+          onPressed: () {
+            Navigator.pushNamed(context, AddNote.pathname);
+          },
           backgroundColor: StyleVars.theme,
         ),
         body: CustomScrollView(

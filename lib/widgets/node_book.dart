@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/style/style_vars.dart';
 
+/* 账本列表中的一个账本项 */
 class NoteBook extends StatelessWidget {
   final String label;
   final String desc;

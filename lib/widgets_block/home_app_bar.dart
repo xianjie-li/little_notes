@@ -9,7 +9,7 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverAppBar(
+    SliverAppBar appBar = SliverAppBar(
       automaticallyImplyLeading: false,
       title: Row(
         children: [
@@ -30,5 +30,9 @@ class HomeAppBar extends StatelessWidget {
       expandedHeight: 180,
       backgroundColor: StyleVars.theme,
     );
+
+    print(appBar.toolbarHeight);
+
+    return appBar;
   }
 }
