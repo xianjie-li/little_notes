@@ -51,16 +51,16 @@ class Keyboard extends StatelessWidget {
                 KeyboardButton('3', color: Colors.blueAccent,),
                 KeyboardButton('6', color: Colors.teal,),
                 KeyboardButton('9', color: Colors.lightGreen,),
-                KeyboardButton('删除', color: Colors.deepOrange,),
+                KeyboardButton('=', color: Colors.blue, bigFont: true,),
               ],
             ),
           ),
           Expanded(
             child: Column(
               children: [
+                KeyboardButton('删除', color: Colors.deepOrange,),
                 KeyboardButton('+', color: Colors.green, bigFont: true,),
                 KeyboardButton('-', color: Colors.red, bigFont: true,),
-                KeyboardButton('=', color: Colors.blue, bigFont: true,),
                 KeyboardButton('提交', color: Colors.pink,),
               ],
             ),

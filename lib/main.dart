@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:little_notes/pages/home.dart';
 import 'package:little_notes/routes/routes.dart';
 
@@ -17,6 +18,15 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: Home.pathName,
       routes: routesMap,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('zh', 'CH'),
+        Locale('en', 'US'),
+      ],
     );
   }
 }
