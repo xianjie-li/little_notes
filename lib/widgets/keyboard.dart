@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:little_notes/common/price_calcer.dart';
 import 'package:little_notes/widgets/keyboard_button.dart';
 
 /* 定制键盘 */
 class Keyboard extends StatelessWidget {
-  const Keyboard({Key? key}) : super(key: key);
+  final VoidCallback? onSubmit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onClear;
+  final ValueChanged<String>? onKeyInput;
+  final VoidCallback? onCalc;
+
+  const Keyboard({Key? key, this.onSubmit, this.onDelete, this.onKeyInput, this.onCalc, this.onClear})
+      : super(key: key);
+
+  void handleKeyDown(String keycode) {
+     if (onKeyInput != null) onKeyInput!(keycode);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,47 +33,113 @@ class Keyboard extends StatelessWidget {
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(32),
             topRight: Radius.circular(32),
-          )
-      ),
+          )),
       child: Row(
         children: [
           Expanded(
             child: Column(
               children: [
-                KeyboardButton('1', color: Colors.red,),
-                KeyboardButton('4', color: Colors.orange,),
-                KeyboardButton('7', color: Colors.yellow.shade700,),
-                KeyboardButton('·', color: Colors.green, bigFont: true,),
+                KeyboardButton(
+                  '1',
+                  color: Colors.red,
+                  onTap: () => handleKeyDown('1'),
+                ),
+                KeyboardButton(
+                  '4',
+                  color: Colors.orange,
+                  onTap: () => handleKeyDown('4'),
+                ),
+                KeyboardButton(
+                  '7',
+                  color: Colors.yellow.shade700,
+                  onTap: () => handleKeyDown('7'),
+                ),
+                KeyboardButton(
+                  '·',
+                  color: Colors.green,
+                  bigFont: true,
+                  onTap: () => handleKeyDown('.'),
+                ),
               ],
             ),
           ),
           Expanded(
             child: Column(
               children: [
-                KeyboardButton('2', color: Colors.cyan,),
-                KeyboardButton('5', color: Colors.blue,),
-                KeyboardButton('8', color: Colors.purple,),
-                KeyboardButton('0', color: Colors.deepPurple,),
+                KeyboardButton(
+                  '2',
+                  color: Colors.cyan,
+                  onTap: () => handleKeyDown('2'),
+                ),
+                KeyboardButton(
+                  '5',
+                  color: Colors.blue,
+                  onTap: () => handleKeyDown('5'),
+                ),
+                KeyboardButton(
+                  '8',
+                  color: Colors.purple,
+                  onTap: () => handleKeyDown('8'),
+                ),
+                KeyboardButton(
+                  '0',
+                  color: Colors.deepPurple,
+                  onTap: () => handleKeyDown('0'),
+                ),
               ],
             ),
           ),
           Expanded(
             child: Column(
               children: [
-                KeyboardButton('3', color: Colors.blueAccent,),
-                KeyboardButton('6', color: Colors.teal,),
-                KeyboardButton('9', color: Colors.lightGreen,),
-                KeyboardButton('=', color: Colors.blue, bigFont: true,),
+                KeyboardButton(
+                  '3',
+                  color: Colors.blueAccent,
+                  onTap: () => handleKeyDown('3'),
+                ),
+                KeyboardButton(
+                  '6',
+                  color: Colors.teal,
+                  onTap: () => handleKeyDown('6'),
+                ),
+                KeyboardButton(
+                  '9',
+                  color: Colors.lightGreen,
+                  onTap: () => handleKeyDown('9'),
+                ),
+                KeyboardButton(
+                  '=',
+                  color: Colors.blue,
+                  onTap: onCalc,
+                  bigFont: true,
+                ),
               ],
             ),
           ),
           Expanded(
             child: Column(
               children: [
-                KeyboardButton('删除', color: Colors.deepOrange,),
-                KeyboardButton('+', color: Colors.green, bigFont: true,),
-                KeyboardButton('-', color: Colors.red, bigFont: true,),
-                KeyboardButton('提交', color: Colors.pink,),
+                KeyboardButton(
+                  '删除',
+                  color: Colors.deepOrange,
+                  onTap: onDelete,
+                  onLongPress: onClear,
+                ),
+                KeyboardButton(
+                  '支',
+                  color: Colors.green,
+                  onTap: () => handleKeyDown(PriceCalcer.addSignal),
+                ),
+                KeyboardButton(
+                  '收',
+                  color: Colors.red,
+                  onTap: () => handleKeyDown(PriceCalcer.subSignal),
+                ),
+                KeyboardButton(
+                  '提交',
+                  color: Colors.pink,
+                  onTap: onSubmit,
+                ),
               ],
             ),
           )

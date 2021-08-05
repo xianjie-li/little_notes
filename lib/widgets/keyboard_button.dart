@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,8 +8,15 @@ class KeyboardButton extends StatefulWidget {
   final String label;
   final bool bigFont;
   final Color? color;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
-  const KeyboardButton(this.label, {Key? key, this.bigFont = false, this.color})
+  const KeyboardButton(this.label,
+      {Key? key,
+      this.bigFont = false,
+      this.color,
+      this.onTap,
+      this.onLongPress})
       : super(key: key);
 
   @override
@@ -16,10 +25,13 @@ class KeyboardButton extends StatefulWidget {
 
 class _KeyboardButtonState extends State<KeyboardButton> {
   bool keyDown = false;
+  Timer? timer;
 
   void handleTapFinish() {
-    setState(() {
-      keyDown = false;
+    timer = Timer(Duration(milliseconds: 100), () {
+      setState(() {
+        keyDown = false;
+      });
     });
   }
 
@@ -28,20 +40,24 @@ class _KeyboardButtonState extends State<KeyboardButton> {
     return Expanded(
         child: GestureDetector(
       onTapDown: (e) {
+        timer?.cancel();
+
+        HapticFeedback.vibrate();
         setState(() {
           keyDown = true;
-          HapticFeedback.vibrate();
         });
       },
       onTapUp: (e) => handleTapFinish(),
       onTapCancel: handleTapFinish,
+      onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
                 color: Colors.black12,
-                offset: Offset(1, keyDown ? 0.5 : 2),
+                offset: Offset(0.2, keyDown ? 0.5 : 2),
                 spreadRadius: keyDown ? 0 : 2),
           ],
           color: Colors.white,
