@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:little_notes/pages/add_book.dart';
+import 'package:little_notes/pages/add_book_page.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/node_book.dart';
 
 /* 账本列表，此页面在抽屉内显示 */
-class Books extends StatefulWidget {
-  const Books({Key? key}) : super(key: key);
+class BooksPage extends StatefulWidget {
+  const BooksPage({Key? key}) : super(key: key);
 
   @override
-  _BooksState createState() => _BooksState();
+  _BooksPageState createState() => _BooksPageState();
 }
 
-class _BooksState extends State<Books> {
+class _BooksPageState extends State<BooksPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,7 +45,7 @@ class _BooksState extends State<Books> {
               NoteBook(
                 isAddButton: true,
                 onTap: () {
-                  Navigator.pushNamed(context, AddBook.pathName);
+                  Navigator.pushNamed(context, AddBookPage.pathName);
                 },
               ),
             ],

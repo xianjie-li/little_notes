@@ -11,24 +11,39 @@ class PriceCalcer extends ValueNotifier<String> {
     bool isSingle = keycode == PriceCalcer.addSignal || keycode == PriceCalcer.subSignal;
 
     if (isSingle) {
-      bool startWithSingle = value[0] == PriceCalcer.addSignal || value[0] == PriceCalcer.subSignal;
-      if (startWithSingle) {
-        value = value.substring(1, value.length);
-      }
+      value = value.substring(1, value.length);
       value = keycode + value;
       return;
     }
 
-    // if (keycode == '+' && value.startsWith(+)) {
-    value = value == '0' ? keycode : value + keycode;
+    if (value.length > 15) return;
+
+    if (keycode == '.') {
+      value = value.replaceAll('.', '');
+      value = value + '.';
+      return;
+    }
+
+    if (value == '+0' || value == '-0') {
+      var prefix = value[0];
+      value = '$prefix$keycode';
+      return;
+    }
+
+    value = value + keycode;
   }
 
   void deleteKey() {
-    if (value == '0') return;
+    if (value == '+0' || value == '-0') return;
+    if (value.length == 2) {
+      clear();
+      return;
+    }
     value = value.substring(0, value.length - 1);
   }
 
   void clear() {
-    value = '0';
+    var prefix = value[0];
+    value = '${prefix}0';
   }
 }

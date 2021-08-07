@@ -26,6 +26,7 @@ class CircularImage extends StatelessWidget {
   final String? label;
   final SizeEnum? size;
   final bool? selected;
+  final Color? color;
 
   const CircularImage({
     Key? key,
@@ -33,6 +34,7 @@ class CircularImage extends StatelessWidget {
     this.label,
     this.size = SizeEnum.regular,
     this.selected,
+    this.color,
   }) : super(key: key);
 
   Widget _buildMain() {
@@ -42,7 +44,7 @@ class CircularImage extends StatelessWidget {
       width: currentSize!['width'],
       height: currentSize['height'],
       decoration: BoxDecoration(
-        color: Colors.pink.shade100,
+        color: color ?? StyleVars.theme,
         borderRadius: BorderRadius.all(Radius.circular(50)),
         border: Border.all(color: StyleVars.theme),
       ),
@@ -55,7 +57,7 @@ class CircularImage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         image,
-        Text(label!, style: TextStyle(color: StyleVars.colorSecond),)
+        Text(label!, style: TextStyle(color: StyleVars.colorSecond, fontSize: StyleVars.fsSM), maxLines: 1, textAlign: TextAlign.center,)
       ],
     );
 
@@ -69,7 +71,7 @@ class CircularImage extends StatelessWidget {
     // 有选中状态时，为其渲染容器
     return Container(
       child: _buildMain(),
-      padding: EdgeInsets.symmetric(horizontal: StyleVars.padding),
+      padding: EdgeInsets.symmetric(horizontal: StyleVars.paddingSM),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(StyleVars.radius)),
         border: Border.all(color: selected! ? StyleVars.theme : Colors.transparent, width: 1),

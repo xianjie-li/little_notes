@@ -5,21 +5,21 @@ import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/circular_image.dart';
 import 'package:little_notes/widgets/date_picker_form_field.dart';
 import 'package:little_notes/widgets/keyboard.dart';
-import 'package:little_notes/widgets_block/cate_list.dart';
+import 'package:little_notes/widgets_block/type_list.dart';
 
-class AddNote extends StatefulWidget {
-  static const String pathname = 'add_note';
+class AddNotePage extends StatefulWidget {
+  static const String pathName = 'add_note';
 
-  const AddNote({Key? key}) : super(key: key);
+  const AddNotePage({Key? key}) : super(key: key);
 
   @override
-  _AddNoteState createState() => _AddNoteState();
+  _AddNotePageState createState() => _AddNotePageState();
 }
 
-class _AddNoteState extends State<AddNote> {
+class _AddNotePageState extends State<AddNotePage> {
   final formKey = GlobalKey<FormState>();
-  String value = '0';
-  PriceCalcer priceCalcer = PriceCalcer('0');
+  String value = '+0';
+  PriceCalcer priceCalcer = PriceCalcer('+0');
 
   bool keyboardShow = true;
 
@@ -40,6 +40,41 @@ class _AddNoteState extends State<AddNote> {
     return Scaffold(
         appBar: AppBar(
           title: Text('记一笔'),
+          actions: [
+            PopupMenuButton<String>(
+              child: Row(
+                children: [
+                  Text('账本'),
+                  Icon(Icons.arrow_drop_down),
+                  Divider(indent: StyleVars.padding,),
+                ],
+              ),
+              initialValue: '账本1',
+              onSelected: (String result) {
+                print(result);
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem<String>(
+                    value: '账本1',
+                    child: Text('Working a lot harder'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: '账本2',
+                    child: Text('Being a lot smarter'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: '账本3',
+                    child: Text('Being a self-starter'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: '账本4',
+                    child: Text('Placed in charge of trading charter'),
+                  ),
+                ];
+              },
+            )
+          ],
         ),
         body: GestureDetector(
             onTap: () {
@@ -78,7 +113,7 @@ class _AddNoteState extends State<AddNote> {
                             ),
                           ),
                           Divider(),
-                          CateList(),
+                          TypeList(),
                           Divider(),
                           Divider(
                             height: StyleVars.padding,
@@ -125,9 +160,6 @@ class _AddNoteState extends State<AddNote> {
                   if (keyboardShow)
                     Keyboard(
                         onKeyInput: priceCalcer.inputKey,
-                        onCalc: () {
-                          print('calc');
-                        },
                         onClear: priceCalcer.clear,
                         onDelete: priceCalcer.deleteKey,
                         onSubmit: () {

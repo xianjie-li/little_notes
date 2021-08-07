@@ -10,13 +10,16 @@ class KeyboardButton extends StatefulWidget {
   final Color? color;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final int? flex;
 
   const KeyboardButton(this.label,
       {Key? key,
-      this.bigFont = false,
-      this.color,
-      this.onTap,
-      this.onLongPress})
+        this.bigFont = false,
+        this.color,
+        this.onTap,
+        this.onLongPress,
+        this.flex = 1
+      })
       : super(key: key);
 
   @override
@@ -37,41 +40,42 @@ class _KeyboardButtonState extends State<KeyboardButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
+        flex: widget.flex!,
         child: GestureDetector(
-      onTapDown: (e) {
-        timer?.cancel();
+          onTapDown: (e) {
+            timer?.cancel();
 
-        HapticFeedback.vibrate();
-        setState(() {
-          keyDown = true;
-        });
-      },
-      onTapUp: (e) => handleTapFinish(),
-      onTapCancel: handleTapFinish,
-      onTap: widget.onTap,
-      onLongPress: widget.onLongPress,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black12,
-                offset: Offset(0.2, keyDown ? 0.5 : 2),
-                spreadRadius: keyDown ? 0 : 2),
-          ],
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(32)),
-        ),
-        child: Align(
-          alignment: Alignment(0, -0.5),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-                fontSize: widget.bigFont ? 28 : 20, color: widget.color),
+            HapticFeedback.vibrate();
+            setState(() {
+              keyDown = true;
+            });
+          },
+          onTapUp: (e) => handleTapFinish(),
+          onTapCancel: handleTapFinish,
+          onTap: widget.onTap,
+          onLongPress: widget.onLongPress,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(0.2, keyDown ? 0.5 : 2),
+                    spreadRadius: keyDown ? 0 : 2),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(32)),
+            ),
+            child: Align(
+              alignment: Alignment(0, -0.3),
+              child: Text(
+                widget.label,
+                style: TextStyle(
+                    fontSize: widget.bigFont ? 28 : 20, color: widget.color),
+              ),
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }

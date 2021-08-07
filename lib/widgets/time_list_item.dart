@@ -26,7 +26,7 @@ class TimeListItem extends StatelessWidget {
       ),
       title: Text(title),
       subtitle: subtitle == null ? null : Text(subtitle!),
-      trailing: Text(trailing, style: TextStyle(color: StyleVars.themeFontColor, fontSize: StyleVars.fsLG, fontWeight: FontWeight.w600),),
+      trailing: Text(trailing, style: TextStyle(color: StyleVars.theme, fontSize: StyleVars.fsLG, fontWeight: FontWeight.w600),),
       // visualDensity: VisualDensity.compact,
       contentPadding: EdgeInsets.symmetric(horizontal: StyleVars.padding, vertical: 2),
     );

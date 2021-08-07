@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:little_notes/common/validators.dart';
 import 'package:little_notes/style/style_vars.dart';
 
-class AddBook extends StatefulWidget {
+class AddBookPage extends StatefulWidget {
   static const pathName = 'add_book';
 
-  AddBook({Key? key}) : super(key: key);
+  AddBookPage({Key? key}) : super(key: key);
 
   @override
-  _AddBookState createState() => _AddBookState();
+  _AddBookPageState createState() => _AddBookPageState();
 }
 
-class _AddBookState extends State<AddBook> {
+class _AddBookPageState extends State<AddBookPage> {
   final _formKey = GlobalKey<FormState>();
 
   @override

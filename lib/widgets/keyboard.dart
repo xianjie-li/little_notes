@@ -8,13 +8,13 @@ class Keyboard extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onClear;
   final ValueChanged<String>? onKeyInput;
-  final VoidCallback? onCalc;
 
-  const Keyboard({Key? key, this.onSubmit, this.onDelete, this.onKeyInput, this.onCalc, this.onClear})
+  const Keyboard(
+      {Key? key, this.onSubmit, this.onDelete, this.onKeyInput, this.onClear})
       : super(key: key);
 
   void handleKeyDown(String keycode) {
-     if (onKeyInput != null) onKeyInput!(keycode);
+    if (onKeyInput != null) onKeyInput!(keycode);
   }
 
   @override
@@ -108,10 +108,10 @@ class Keyboard extends StatelessWidget {
                   onTap: () => handleKeyDown('9'),
                 ),
                 KeyboardButton(
-                  '=',
-                  color: Colors.blue,
-                  onTap: onCalc,
-                  bigFont: true,
+                  '删除',
+                  color: Colors.deepOrange,
+                  onTap: onDelete,
+                  onLongPress: onClear,
                 ),
               ],
             ),
@@ -120,26 +120,23 @@ class Keyboard extends StatelessWidget {
             child: Column(
               children: [
                 KeyboardButton(
-                  '删除',
-                  color: Colors.deepOrange,
-                  onTap: onDelete,
-                  onLongPress: onClear,
-                ),
-                KeyboardButton(
-                  '支',
+                  '+',
                   color: Colors.green,
                   onTap: () => handleKeyDown(PriceCalcer.addSignal),
+                  bigFont: true,
                 ),
                 KeyboardButton(
-                  '收',
+                  '-',
                   color: Colors.red,
                   onTap: () => handleKeyDown(PriceCalcer.subSignal),
+                  bigFont: true,
                 ),
                 KeyboardButton(
                   '提交',
                   color: Colors.pink,
                   onTap: onSubmit,
-                ),
+                  flex: 2,
+                )
               ],
             ),
           )

@@ -28,7 +28,7 @@ class EntryIconBtn extends StatelessWidget {
                 color: Colors.grey.shade200,
                 borderRadius:
                     BorderRadius.all(Radius.circular(StyleVars.radiusSM)),
-                border: Border.all(color: StyleVars.themeFontColor)
+                border: Border.all(color: StyleVars.theme.shade300)
               ),
               child: Text(text, style: TextStyle(height: 1.3, fontSize: 10),),
             ))

@@ -21,9 +21,26 @@ class StyleVars {
   static const double radiusML = 12;
 
   /* 颜色 */
-  static final Color theme =  Colors.pink.shade200;
   static final Color themeFontColor = Colors.pink.shade300;
   static final Color colorSecond = Colors.black54;
+  // 文字颜色
   static final Color colorTitle = Colors.black87;
   static final Color color = Color(0xFF101010);
+  // 配色
+  static const MaterialColor theme = MaterialColor(
+    _themePrimaryValue,
+    <int, Color>{
+      50: Color(0xFFfff0f6),
+      100: Color(0xFFfff0f3),
+      200: Color(0xFFfff0f4),
+      300: Color(0xFFffe0ea),
+      400: Color(0xFFffb8cf),
+      500: Color(_themePrimaryValue),
+      600: Color(0xffef6198),
+      700: Color(0xffdc4e8b),
+      800: Color(0xffd03176),
+      900: Color(0xFFD01876),
+    },
+  );
+  static const int _themePrimaryValue = 0xFFff8eb8;
 }
