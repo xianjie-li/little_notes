@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/validators.dart';
 import 'package:little_notes/style/style_vars.dart';
+import 'package:little_notes/widgets/color_list.dart';
+import 'package:little_notes/widgets/color_picker.dart';
 
-class AddBookPage extends StatefulWidget {
-  static const pathName = 'add_book';
+class AddTypePage extends StatefulWidget {
+  static const pathName = 'add_type';
 
-  AddBookPage({Key? key}) : super(key: key);
+  const AddTypePage({Key? key}) : super(key: key);
 
   @override
-  _AddBookPageState createState() => _AddBookPageState();
+  _AddTypePageState createState() => _AddTypePageState();
 }
 
-class _AddBookPageState extends State<AddBookPage> {
+class _AddTypePageState extends State<AddTypePage> {
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('新增账本/账本修改'),
+        title: Text('新增、修改分类'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -42,32 +44,13 @@ class _AddBookPageState extends State<AddBookPage> {
                 Divider(
                   color: Colors.transparent,
                 ),
-                InputDecorator(
+                TextFormField(
+                  validator: notEmptyStringValidatorGetter(),
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                      labelText: '侧重内容',
-                      helperText: '控制要在页面中着重显示的内容',
-                      helperMaxLines: 2,
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: StyleVars.padding,
-                          vertical: StyleVars.paddingLG)),
-                  child: Row(
-                    children: [
-                      Radio(
-                        value: '1',
-                        groupValue: '1',
-                        onChanged: (value) {},
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      Text('预算'),
-                      Radio(
-                        value: '2',
-                        groupValue: '1',
-                        onChanged: (value) {},
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      Text('余额'),
-                    ],
+                    labelText: '分类名',
+                    hintText: '输入分类名',
+                    border: OutlineInputBorder(),
                   ),
                 ),
                 Divider(
@@ -77,23 +60,20 @@ class _AddBookPageState extends State<AddBookPage> {
                   validator: notEmptyStringValidatorGetter(),
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    labelText: '账本名',
-                    hintText: '输入账本名称',
+                    labelText: '父分类',
+                    hintText: '可选，用于生成更细粒度的报表',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 Divider(
                   color: Colors.transparent,
                 ),
-                TextFormField(
-                  validator: combineValidator([
-                    notEmptyStringValidatorGetter(),
-                    isNumberValidatorGetter(),
-                  ]),
-                  keyboardType: TextInputType.number,
+                InputDecorator(
+                  isEmpty: true,
+                  child: ColorPicker(),
                   decoration: InputDecoration(
-                    labelText: '初始余额',
-                    hintText: '输入账本初始余额',
+                    labelText: '背景色',
+                    hintText: '选择分类背景色',
                     border: OutlineInputBorder(),
                   ),
                 ),
