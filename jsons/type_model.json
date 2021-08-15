@@ -1,0 +1,9 @@
+{
+  "id": 0,
+  "parentId": 0,
+  "icon": "string",
+  "name": "string",
+  "color": "string",
+  "createDate": 0,
+  "updateDate": 0
+}

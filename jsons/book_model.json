@@ -1,0 +1,11 @@
+{
+  "id": 0,
+  "focus":"@enum:budget,balance",
+  "icon": "string",
+  "name": "string",
+  "color": "string",
+  "balance": 0.0,
+  "budget": 0.0,
+  "createDate": 0,
+  "updateDate": 0
+}

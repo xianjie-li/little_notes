@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:little_notes/dao/book_dao.dart';
+import 'package:little_notes/models/book_model.dart';
 import 'package:little_notes/pages/add_book_page.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/node_book.dart';
@@ -12,6 +14,25 @@ class BooksPage extends StatefulWidget {
 }
 
 class _BooksPageState extends State<BooksPage> {
+  List<BookModel> list = [];
+
+  List<MaterialColor> colors = [Colors.blue, Colors.cyan, StyleVars.theme];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getList();
+  }
+
+  void getList() async {
+    var _list = await BookDao().queryList();
+    print(_list);
+    setState(() {
+      list = _list;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,31 +45,38 @@ class _BooksPageState extends State<BooksPage> {
             childAspectRatio: 2 / 2.3,
             padding: EdgeInsets.symmetric(
                 vertical: 48, horizontal: StyleVars.paddingLG),
-            children: [
-              NoteBook(
-                  label: '我的账本',
-                  desc: '预算：736元',
-                  icon: '270f',
-                  color: StyleVars.theme),
-              NoteBook(
-                label: '我的账本2',
-                desc: '余额：736元',
-                icon: '1f9cb',
-                color: Colors.blue,
-                selected: true,
-              ),
-              NoteBook(
-                  label: '我的账本3',
-                  desc: '余额：736元',
-                  icon: '1f6b5-1f3fb-200d-2640-fe0f',
-                  color: Colors.cyan),
-              NoteBook(
-                isAddButton: true,
-                onTap: () {
-                  Navigator.pushNamed(context, AddBookPage.pathName);
-                },
-              ),
-            ],
+            children:
+            list.map((item) => NoteBook(
+              label: item.name,
+              desc: '预算: ${item.budget}',
+              icon: item.icon,
+              color: colors[list.indexOf(item)],
+            )).toList(),
+            // [
+            //   NoteBook(
+            //       label: '我的账本',
+            //       desc: '预算：736元',
+            //       icon: '270f',
+            //       color: StyleVars.theme),
+            //   NoteBook(
+            //     label: '我的账本2',
+            //     desc: '余额：736元',
+            //     icon: '1f9cb',
+            //     color: Colors.blue,
+            //     selected: true,
+            //   ),
+            //   NoteBook(
+            //       label: '我的账本3',
+            //       desc: '余额：736元',
+            //       icon: '1f6b5-1f3fb-200d-2640-fe0f',
+            //       color: Colors.cyan),
+            //   NoteBook(
+            //     isAddButton: true,
+            //     onTap: () {
+            //       Navigator.pushNamed(context, AddBookPage.pathName);
+            //     },
+            //   ),
+            // ],
           ),
         ),
         Container(

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:little_notes/pages/home_page.dart';
 import 'package:little_notes/routes/routes.dart';
+import 'package:little_notes/common/db.dart';
 import 'package:little_notes/style/style_vars.dart';
 
 void main() async {
+  await DB().open();
+
   runApp(MyApp());
 }
 

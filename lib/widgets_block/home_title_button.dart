@@ -11,7 +11,7 @@ class HomeTitleButton extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            'lib/assets/1f4d8.png',
+            'lib/assets/twemoji/1f4d8.png',
             width: 20,
           ),
           Divider(

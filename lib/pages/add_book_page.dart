@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/validators.dart';
+import 'package:little_notes/pages/emoji_picker_page.dart';
 import 'package:little_notes/style/style_vars.dart';
 
 class AddBookPage extends StatefulWidget {
@@ -28,15 +29,20 @@ class _AddBookPageState extends State<AddBookPage> {
             padding: EdgeInsets.all(StyleVars.paddingLG),
             child: Column(
               children: [
-                InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: '图标',
-                    border: OutlineInputBorder(),
-                  ),
-                  child: Image.asset(
-                    'lib/assets/twemoji/1f3c5.png',
-                    alignment: Alignment.centerLeft,
-                    height: 30,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, EmojiPickerPage.pathName);
+                  },
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: '图标',
+                      border: OutlineInputBorder(),
+                    ),
+                    child: Image.asset(
+                      'lib/assets/twemoji/1f3c5.png',
+                      alignment: Alignment.centerLeft,
+                      height: 30,
+                    ),
                   ),
                 ),
                 Divider(
