@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path/path.dart';
 
 class EmojiPickerPage extends StatefulWidget {
   static const pathName = 'emoji_picker_page';
@@ -21,7 +23,9 @@ class _EmojiPickerPageState extends State<EmojiPickerPage> {
 
     rootBundle.loadString('AssetManifest.json').then((value) {
       Map<String, dynamic> files = jsonDecode(value);
-      List<String> _emojis = files.keys.where((element) => element.startsWith('lib/assets/twemoji/')).toList();
+      List<String> _emojis = files.keys
+          .where((element) => element.startsWith('lib/assets/twemoji/'))
+          .toList();
 
       setState(() {
         emojis = _emojis;
@@ -36,19 +40,19 @@ class _EmojiPickerPageState extends State<EmojiPickerPage> {
         title: Text('选择图标'),
       ),
       body: GridView.builder(
-          itemCount: emojis.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 6,
+        itemCount: emojis.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 6,
+        ),
+        itemBuilder: (_, index) => InkWell(
+          onTap: () {
+            Navigator.pop(context, basenameWithoutExtension(emojis[index]));
+          },
+          child: Container(
+            padding: EdgeInsets.all(16),
+            child: Image.asset(emojis[index]),
           ),
-          itemBuilder: (_, index) => InkWell(
-            onTap: () {
-              Navigator.pop(context, emojis[index]);
-            },
-            child: Container(
-              padding: EdgeInsets.all(16),
-              child: Image.asset(emojis[index]),
-            ),
-          ),
+        ),
       ),
     );
   }

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 /* 渲染material colors列表并提供选中回调 */
 class ColorList extends StatefulWidget {
-  const ColorList({Key? key}) : super(key: key);
+  final ValueChanged<String>? onSelect;
+
+  const ColorList({
+    Key? key,
+    this.onSelect,
+  }) : super(key: key);
 
   @override
   _ColorListState createState() => _ColorListState();
@@ -25,7 +30,9 @@ class _ColorListState extends State<ColorList> {
 
           return Material(
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                if (widget.onSelect != null) widget.onSelect!(currentColor.value.toString());
+              },
               child: Ink(
                 color: currentColor,
               ),

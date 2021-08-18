@@ -67,9 +67,12 @@ class NoteBook extends StatelessWidget {
             Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis, ),
             Text(desc, style: TextStyle(color: Colors.white70),),
             Spacer(),
-            Align(
-              child: Image.asset('lib/assets/twemoji/$icon.png', width: 80),
-              alignment: Alignment(2.3, 0),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Align(
+                child: Image.asset('lib/assets/twemoji/$icon.png', width: 48),
+                alignment: Alignment(1.5, 0),
+              ),
             ),
           ],
         ),

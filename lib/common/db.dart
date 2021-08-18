@@ -15,8 +15,9 @@ class DB {
 
     print('DB path: $path');
 
-    final db = await openDatabase(path, version: 2,
+    final db = await openDatabase(path, version: 3,
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
+          print('update db');
       await createInitTables(db);
       await patchTables();
     });

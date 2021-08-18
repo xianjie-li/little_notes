@@ -25,9 +25,10 @@ class BookDao {
         ?,
         ?,
         ?,
+        ?,
         ?
       );
-    ''', [book.focus, book.icon, book.name, book.balance, book.budget, book.createDate, book.updateDate]);
+    ''', [book.focus, book.icon, book.name, book.balance, book.budget, book.color, book.createDate, book.updateDate]);
 
     return id is num;
   }

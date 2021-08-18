@@ -13,4 +13,8 @@ class DateHelper {
       d1.month == d2.month &&
       d1.day == d2.day;
   }
+
+  static int getSinceEpoch() {
+    return DateTime.now().millisecondsSinceEpoch;
+  }
 }

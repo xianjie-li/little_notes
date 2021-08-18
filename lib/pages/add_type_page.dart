@@ -69,9 +69,10 @@ class _AddTypePageState extends State<AddTypePage> {
                   color: Colors.transparent,
                 ),
                 InputDecorator(
-                  isEmpty: true,
+                  // isEmpty: true,
                   child: ColorPicker(),
                   decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                     labelText: '背景色',
                     hintText: '选择分类背景色',
                     border: OutlineInputBorder(),
