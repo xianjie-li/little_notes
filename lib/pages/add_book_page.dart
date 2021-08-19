@@ -3,12 +3,12 @@ import 'package:little_notes/common/date_helper.dart';
 import 'package:little_notes/common/validators.dart';
 import 'package:little_notes/dao/book_dao.dart';
 import 'package:little_notes/models/book_model.dart';
+import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/color_form_field.dart';
 import 'package:little_notes/widgets/icon_form_field.dart';
 import 'package:little_notes/widgets/radio_form_field.dart';
-import 'package:little_notes/widgets/tips.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:provider/provider.dart';
 
 class AddBookPage extends StatefulWidget {
   static const pathName = 'add_book';
@@ -21,6 +21,7 @@ class AddBookPage extends StatefulWidget {
 
 class _AddBookPageState extends State<AddBookPage> {
   final _formKey = GlobalKey<FormState>();
+  late AppService appService;
 
   final Map<String, dynamic> formValue = {
     'id': 0,
@@ -30,25 +31,18 @@ class _AddBookPageState extends State<AddBookPage> {
     'updateDate': DateHelper.getSinceEpoch(),
   };
 
+  @override
+  void initState() {
+    super.initState();
+    appService = context.read<AppService>();
+  }
+
   /// 提交账本
   void submit() async {
     var book = BookModel.fromJson(formValue);
 
-    try {
-      await BookDao().add(book);
-
-      tips(context, '添加完成!', Colors.green);
-
+    if (await appService.addBook(context, book)) {
       Navigator.pop(context);
-
-    } on DatabaseException catch (err) {
-      if (err.isUniqueConstraintError()) {
-        tips(context, '该账本已存在', Colors.red);
-      } else {
-        tips(context, '写入数据失败, code: ${err.getResultCode()}', Colors.red);
-      }
-    } catch (err) {
-      tips(context, '操作异常', Colors.red);
     }
   }
 

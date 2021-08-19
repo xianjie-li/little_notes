@@ -25,7 +25,13 @@ class _HomePageState extends State<HomePage> {
           child: BooksPage(),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Transform.rotate(angle: pi / 2, child: Image.asset('lib/assets/twemoji/270f.png', width: 30,),),
+          child: Transform.rotate(
+            angle: pi / 2,
+            child: Image.asset(
+              'lib/assets/twemoji/270f.png',
+              width: 30,
+            ),
+          ),
           onPressed: () {
             Navigator.pushNamed(context, AddNotePage.pathName);
           },

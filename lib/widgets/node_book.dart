@@ -7,6 +7,7 @@ class NoteBook extends StatelessWidget {
   final String desc;
   final String icon;
   final Color color;
+
   // 显示添加按钮
   final bool? isAddButton;
   final bool? selected;
@@ -25,7 +26,6 @@ class NoteBook extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Stack(
       children: [
         Card(
@@ -36,11 +36,16 @@ class NoteBook extends StatelessWidget {
             child: buildMain(),
           ),
         ),
-        if (selected!) Positioned(
-          right: 8,
-          top: -1,
-          child: Icon(Icons.bookmark_outlined, color: Colors.pink.shade400,),
-        )
+        if (selected!)
+          Positioned(
+            right: 8,
+            top: -2,
+            child: Icon(
+              Icons.bookmark_outlined,
+              color: Colors.pink.shade400,
+              size: 28,
+            ),
+          )
       ],
     );
   }
@@ -51,21 +56,36 @@ class NoteBook extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add, size: 42, color: StyleVars.colorSecond,),
-            Text('新建账本', style: TextStyle(fontSize: StyleVars.fs),)
+            Icon(
+              Icons.add,
+              size: 42,
+              color: StyleVars.colorSecond,
+            ),
+            Text(
+              '新建账本',
+              style: TextStyle(fontSize: StyleVars.fs),
+            )
           ],
         ),
       );
     }
 
-    return Padding(
+    return Container(
       child: DefaultTextStyle(
         style: TextStyle(color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600), maxLines: 1, overflow: TextOverflow.ellipsis, ),
-            Text(desc, style: TextStyle(color: Colors.white70),),
+            Text(
+              label,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              desc,
+              style: TextStyle(color: Colors.white70),
+            ),
             Spacer(),
             Container(
               padding: EdgeInsets.all(10),
@@ -77,7 +97,16 @@ class NoteBook extends StatelessWidget {
           ],
         ),
       ),
-      padding: EdgeInsets.only(top: StyleVars.padding, left: StyleVars.padding, right: StyleVars.padding),
+      padding: EdgeInsets.only(
+          top: StyleVars.padding,
+          left: StyleVars.padding,
+          right: StyleVars.padding),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: selected == true ? StyleVars.theme : Colors.transparent,
+            width: 2),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+      ),
     );
   }
 }

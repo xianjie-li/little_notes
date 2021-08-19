@@ -32,4 +32,12 @@ class BookDao {
 
     return id is num;
   }
+
+  Future<int> delete(BookModel book) async {
+    int count = await DB.db.rawDelete('''
+      DELETE FROM $tableName WHERE id = ?
+    ''', [book.id]);
+
+    return count;
+  }
 }
