@@ -30,17 +30,20 @@ class AppService extends ChangeNotifier {
 
   /// 获取账本列表
   Future getBooks() async {
+    print('getBooks');
     var list = await bookDao.queryList();
     bookList = list;
     notifyListeners();
   }
 
-  /// 新增账本
-  Future<bool> addBook(BuildContext context, BookModel book ) async {
+  /// 新增/编辑 账本
+  Future<bool> addOrEditBook(BuildContext context, BookModel book, [bool isEdit = false]) async {
     try {
-      await BookDao().add(book);
+      isEdit ? await bookDao.edit(book) : await bookDao.add(book);
 
-      tips(context, '添加完成!', Colors.green);
+      tips(context, isEdit ? '修改完成!' : '添加完成!', Colors.green);
+
+      getBooks();
 
       return true;
     } on DatabaseException catch (err) {
@@ -65,8 +68,6 @@ class AppService extends ChangeNotifier {
 
     try {
       var count = await bookDao.delete(book);
-      print(count);
-      print(book.name);
 
       if (count == 0) {
         tips(context, '没有找到该账本', Colors.orange);

@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
+import 'package:provider/provider.dart';
 
 import 'home_banner.dart';
 import 'home_title_button.dart';
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends StatefulWidget {
   const HomeAppBar({Key? key}) : super(key: key);
+
+  @override
+  _HomeAppBarState createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
+  late AppService appService;
+
+  @override
+  void initState() {
+    super.initState();
+    appService = context.read<AppService>();
+  }
 
   @override
   Widget build(BuildContext context) {

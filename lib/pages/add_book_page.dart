@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/date_helper.dart';
 import 'package:little_notes/common/validators.dart';
@@ -12,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class AddBookPage extends StatefulWidget {
   static const pathName = 'add_book';
+  static const editFlag = 'edit_flag';
 
   AddBookPage({Key? key}) : super(key: key);
 
@@ -27,8 +30,6 @@ class _AddBookPageState extends State<AddBookPage> {
     'id': 0,
     'balance': 0,
     'budget': 0,
-    'createDate': DateHelper.getSinceEpoch(),
-    'updateDate': DateHelper.getSinceEpoch(),
   };
 
   @override
@@ -38,19 +39,43 @@ class _AddBookPageState extends State<AddBookPage> {
   }
 
   /// 提交账本
-  void submit() async {
-    var book = BookModel.fromJson(formValue);
+  void submit(BookModel? currentBook) async {
+    late BookModel eBook;
 
-    if (await appService.addBook(context, book)) {
-      Navigator.pop(context);
+    formValue['updateDate'] = DateHelper.getSinceEpoch();
+
+    if (currentBook == null) {
+      formValue['createDate'] = formValue['updateDate'];
+
+      eBook = BookModel.fromJson(formValue);
+
+      await appService.addOrEditBook(context, eBook);
+    } else {
+      var fv = Map.of(formValue);
+      // 更新时需要去掉这些项
+      fv.remove('id');
+      fv.remove('createDate');
+      fv.remove('balance');
+
+      eBook = BookModel.fromJson({
+        ...currentBook.toJson(),
+        ...fv,
+      });
+
+      await appService.addOrEditBook(context, eBook, true);
     }
+
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isEdit = ModalRoute.of(context)!.settings.arguments == AddBookPage.editFlag;
+    var currentBook = isEdit ? context.select<AppService, BookModel?>((value) => value.currentBook) : null;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('新增账本/账本修改'),
+        title: Text(currentBook != null ? '账本修改' : '新增账本'),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -63,6 +88,7 @@ class _AddBookPageState extends State<AddBookPage> {
               children: [
                 IconFormField(
                   validator: notEmptyStringValidatorGetter(),
+                  initialValue: currentBook?.icon,
                   onSaved: (val) {
                     formValue['icon'] = val;
                   },
@@ -79,6 +105,7 @@ class _AddBookPageState extends State<AddBookPage> {
                         '余额', BookModelFocusEnum.Balance.value!),
                   ],
                   validator: notEmptyStringValidatorGetter(),
+                  initialValue: currentBook?.focus,
                   onSaved: (val) {
                     formValue['focus'] = val;
                   },
@@ -101,14 +128,15 @@ class _AddBookPageState extends State<AddBookPage> {
                     hintText: '输入账本名称',
                     border: OutlineInputBorder(),
                   ),
+                  initialValue: currentBook?.name,
                   onSaved: (val) {
                     formValue['name'] = val;
                   },
                 ),
-                Divider(
+                if (currentBook == null) Divider(
                   color: Colors.transparent,
                 ),
-                TextFormField(
+                if (currentBook == null) TextFormField(
                   validator: combineValidator([
                     notEmptyStringValidatorGetter(),
                     isNumberValidatorGetter(),
@@ -119,6 +147,7 @@ class _AddBookPageState extends State<AddBookPage> {
                     hintText: '输入账本初始余额',
                     border: OutlineInputBorder(),
                   ),
+                  initialValue: currentBook?.balance.toString(),
                   onSaved: (val) {
                     formValue['balance'] = double.parse(val!);
                   },
@@ -137,6 +166,7 @@ class _AddBookPageState extends State<AddBookPage> {
                     hintText: '输入账本每月预算',
                     border: OutlineInputBorder(),
                   ),
+                  initialValue: currentBook?.budget.toString(),
                   onSaved: (val) {
                     formValue['budget'] = double.parse(val!);
                   },
@@ -146,6 +176,7 @@ class _AddBookPageState extends State<AddBookPage> {
                 ),
                 ColorFormField(
                   validator: notEmptyStringValidatorGetter(),
+                  initialValue: currentBook?.color,
                   onSaved: (val) {
                     formValue['color'] = val;
                   },
@@ -166,7 +197,7 @@ class _AddBookPageState extends State<AddBookPage> {
                               if (!(_formKey.currentState?.validate() ?? true))
                                 return;
                               _formKey.currentState?.save();
-                              submit();
+                              submit(currentBook);
                             },
                             child: Text('提交')))
                   ],

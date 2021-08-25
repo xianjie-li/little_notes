@@ -4,8 +4,16 @@ import 'package:sqflite/sqflite.dart';
 
 /// 用于方便的获取客户端Sqlite
 class DB {
+  // 每次版本变更都会进行一次数据库初始化, 可以借此来确保数据表存在且为最新版本
+  static const int DBVersion = 6;
+
   /// 为了方便使用，这里假设数据库只在flutter初始化后调用, 应避免在完成装载前使用
   static late final Database db;
+
+  static const BOOK = 'book';
+  static const NOTE = 'note';
+  static const TYPE = 'type';
+  static const SETTING = 'setting';
 
   /// 开启链接
   Future open() async {
@@ -15,15 +23,23 @@ class DB {
 
     print('DB path: $path');
 
-    final db = await openDatabase(path, version: 3,
+    final db = await openDatabase(path, version: DB.DBVersion,
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
           print('update db');
+
       await createInitTables(db);
-      await patchTables();
+      await patchTables(db);
+      await init(db);
     });
 
     db
-        .rawQuery('SELECT name FROM sqlite_master WHERE type="table";')
+        .rawQuery('SELECT name FROM sqlite_master WHERE type="table"')
+        .then((value) {
+      print(value);
+    });
+
+    db
+        .rawQuery('SELECT name FROM setting')
         .then((value) {
       print(value);
     });
@@ -35,7 +51,7 @@ class DB {
   Future createInitTables(Database db) async {
     /* 账本表 */
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS book(
+      CREATE TABLE IF NOT EXISTS ${DB.BOOK}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,      -- 主键
         focus TEXT NOT NULL,                       -- 账本关注点
         icon TEXT NOT NULL,                        -- 图标
@@ -50,7 +66,7 @@ class DB {
 
     /* 记录表 */
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS note(
+      CREATE TABLE IF NOT EXISTS ${DB.NOTE}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,      -- 主键
         bookId INTEGER NOT NULL,                   -- 关联的账本id
         typeId INTEGER NOT NULL,                   -- 关联的类型id
@@ -64,7 +80,7 @@ class DB {
 
     /* 类型表 */
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS type(
+      CREATE TABLE IF NOT EXISTS ${DB.TYPE}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,      -- 主键
         parentId INTEGER,                          -- 父类型id
         icon TEXT NOT NULL,                        -- 图标
@@ -74,16 +90,40 @@ class DB {
         updateDate INTEGER NOT NULL                -- 更新时间
       )
     ''');
+
+
+    /* 设置表 */
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS ${DB.SETTING}(
+        currentBookId INTEGER                     -- 当前账本
+      )
+    ''');
   }
 
   /// 运行表升降级补丁
-  /// 数据表需要更新时，应在方法末尾追加修改查询, 并备注版本, 注意一定不要删除之前的查询补丁
-  /// 每次更新都会运行所有补丁，因为数据库存在用户端，随时可能被用户手动清理
-  Future patchTables() async {
+  /// 数据表需要更新时，应在方法末尾追加修改查询, 并备注版本, 注意一定不要删除之前的补丁
+  /// 每次更新都会运行所有补丁，因为数据库在用户端，随时可能被用户手动清理
+  Future patchTables(Database db) async {
     // version 1
     // patch query 1...
 
     // version 2
     // patch query 2...
+  }
+
+  /// 执行初始化，例如添加默认分类
+  Future init(Database db) async {
+    // var list = await db.rawQuery('SELECT * FROM ${DB.SETTING}');
+    //
+    // // 设置表为空时，表示第一次进入app，为其添加默认数据并执行一些初始化操作
+    // if (list.isEmpty) {
+    //   await db.rawInsert('''
+    //     INSERT INTO
+    //       ${DB.SETTING}
+    //     VALUES(
+    //       null
+    //     )
+    //   ''');
+    // }
   }
 }

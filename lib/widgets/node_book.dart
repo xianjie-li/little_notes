@@ -12,6 +12,7 @@ class NoteBook extends StatelessWidget {
   final bool? isAddButton;
   final bool? selected;
   final GestureTapCallback? onTap;
+  final GestureTapCallback? onDoubleTap;
 
   const NoteBook({
     Key? key,
@@ -22,6 +23,7 @@ class NoteBook extends StatelessWidget {
     this.isAddButton = false,
     this.selected = false,
     this.onTap,
+    this.onDoubleTap,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class NoteBook extends StatelessWidget {
           elevation: 2,
           child: InkWell(
             onTap: onTap,
+            onDoubleTap: onDoubleTap,
             child: buildMain(),
           ),
         ),
@@ -85,6 +88,8 @@ class NoteBook extends StatelessWidget {
             Text(
               desc,
               style: TextStyle(color: Colors.white70),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
             Spacer(),
             Container(
@@ -98,7 +103,7 @@ class NoteBook extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.only(
-          top: StyleVars.padding,
+          top: StyleVars.paddingSM,
           left: StyleVars.padding,
           right: StyleVars.padding),
       decoration: BoxDecoration(

@@ -33,6 +33,27 @@ class BookDao {
     return id is num;
   }
 
+  Future<bool> edit(BookModel book) async {
+    int id = await DB.db.rawUpdate('''
+      UPDATE 
+        $tableName
+      SET
+        focus = ?,
+        icon = ?,
+        name = ?,
+        budget = ?,
+        color = ?,
+        updateDate = ?
+      WHERE
+        id = ?
+    ''', [
+      book.focus, book.icon, book.name, book.budget, book.color, book.updateDate,
+      book.id,
+    ]);
+
+    return id is num;
+  }
+
   Future<int> delete(BookModel book) async {
     int count = await DB.db.rawDelete('''
       DELETE FROM $tableName WHERE id = ?

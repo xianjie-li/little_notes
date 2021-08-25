@@ -49,8 +49,7 @@ class _BooksPageState extends State<BooksPage> {
       NoteBook(
         isAddButton: true,
         onTap: () {
-          Navigator.pushNamed(context, AddBookPage.pathName)
-              .then((value) => appService.getBooks());
+          Navigator.pushNamed(context, AddBookPage.pathName);
         },
       ),
     ];
@@ -96,7 +95,9 @@ class _BooksPageState extends State<BooksPage> {
                   indent: StyleVars.padding,
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AddBookPage.pathName, arguments: AddBookPage.editFlag);
+                  },
                   label: Text('修改'),
                   icon: Icon(Icons.edit),
                   style: ButtonStyle(
