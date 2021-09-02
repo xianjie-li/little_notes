@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:little_notes/common/init.dart';
 import 'package:little_notes/pages/home_page.dart';
 import 'package:little_notes/routes/routes.dart';
 import 'package:little_notes/common/db.dart';
@@ -8,7 +9,10 @@ import 'package:little_notes/style/style_vars.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  /* 💥 注意，一定要在 open 之后才能访问 DB.db */
   await DB().open();
+
+  init();
 
   runApp(
       MultiProvider(
