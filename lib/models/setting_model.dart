@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 class SettingModel {
 
   const SettingModel({
-    required this.currentBookId,
+    this.currentBookId,
   });
 
-  final int currentBookId;
+  final int? currentBookId;
 
   factory SettingModel.fromJson(Map<String,dynamic> json) => SettingModel(
-    currentBookId: json['currentBookId'] as int
+    currentBookId: json['currentBookId'] != null ? json['currentBookId'] as int : null
   );
   
   Map<String, dynamic> toJson() => {
