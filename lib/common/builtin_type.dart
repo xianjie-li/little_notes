@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 
+// 内置类型，在初次构建时添加到数据库
 var builtInType = [
   {
     'icon': '1f354',
@@ -30,7 +31,7 @@ var builtInType = [
   {
     'icon': '1f455',
     'name': '穿搭',
-    'color': Colors.blue,
+    'color': Colors.lightBlueAccent,
   },
   {
     'icon': '1f973',

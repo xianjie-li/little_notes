@@ -2,21 +2,16 @@ import 'package:little_notes/common/db.dart';
 import 'package:little_notes/models/book_model.dart';
 
 class BookDao {
-  final String tableName = 'book';
-
-  void query(int id) async {
-    List<Map<String, Object?>> res = await DB.db.rawQuery('SELECT * FROM $tableName where id = $id');
-    print(res);
-  }
-
+  /// 查询列表
   Future<List<BookModel>> queryList() async {
-    List<Map<String, Object?>> res = await DB.db.rawQuery('SELECT * FROM $tableName');
+    List<Map<String, Object?>> res = await DB.db.rawQuery('SELECT * FROM ${DB.BOOK}');
     return res.map((e) => BookModel.fromJson(e)).toList();
   }
 
+  /// 增加
   Future<bool> add(BookModel book) async {
     int id = await DB.db.rawInsert('''
-      INSERT INTO $tableName
+      INSERT INTO ${DB.BOOK}
       VALUES(
         null,
         ?,
@@ -33,10 +28,11 @@ class BookDao {
     return id is num;
   }
 
+  /// 修改
   Future<bool> edit(BookModel book) async {
     int id = await DB.db.rawUpdate('''
       UPDATE 
-        $tableName
+        ${DB.BOOK}
       SET
         focus = ?,
         icon = ?,
@@ -54,9 +50,10 @@ class BookDao {
     return id is num;
   }
 
+  /// 批量增加类型
   Future<int> delete(BookModel book) async {
     int count = await DB.db.rawDelete('''
-      DELETE FROM $tableName WHERE id = ?
+      DELETE FROM ${DB.BOOK} WHERE id = ?
     ''', [book.id]);
 
     return count;

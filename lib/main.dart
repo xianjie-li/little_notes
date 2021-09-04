@@ -16,49 +16,19 @@ void main() async {
   /* 💥 注意，一定要在 open 之后才能访问 DB.db */
   await DB().open();
 
-  init();
+  await init();
 
   runApp(
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => AppService()),
         ],
-        child:  MyApp(),
+        child: App(),
       )
   );
 }
 
-class MyApp extends StatelessWidget {
-  MyApp() {
-    init();
-  }
-
-  /// 这里进行一些初始化操作
-  void init() async {
-    var settingDao = SettingDao();
-    var setting = await settingDao.query();
-
-    if (setting == null) {
-      await settingDao.init();
-    }
-
-    var now = DateHelper.getSinceEpoch();
-
-    var gg = builtInType
-        .map<TypeModel>((e) => TypeModel(
-        id: 0,
-        icon: e['icon'] as String,
-        name: e['name'] as String,
-        color: (e['color'] as Color).value.toString(),
-        createDate: now,
-        updateDate: now))
-        .toList();
-
-    print(gg);
-
-    // DB.db.execute('delete from setting');
-    print(setting);
-  }
+class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {

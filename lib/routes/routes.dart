@@ -11,6 +11,8 @@ final Map<String, WidgetBuilder> routesMap = {
   AddBookPage.pathName: (context) => AddBookPage(),
   AddNotePage.pathName: (context) => AddNotePage(),
   TypePage.pathName: (context) => TypePage(),
-  AddTypePage.pathName: (context) => AddTypePage(),
+  AddTypePage.pathName: (context) => AddTypePage(
+    id: ModalRoute.of(context)!.settings.arguments as int?,
+  ),
   EmojiPickerPage.pathName: (context) => EmojiPickerPage(),
 };

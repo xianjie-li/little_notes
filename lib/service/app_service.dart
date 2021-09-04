@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/dao/book_dao.dart';
+import 'package:little_notes/dao/type_dao.dart';
 import 'package:little_notes/models/book_model.dart';
+import 'package:little_notes/models/index.dart';
 import 'package:little_notes/widgets/tips.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,6 +16,13 @@ class AppService extends ChangeNotifier {
     getBooks();
   }
 
+  /**
+   * ################################
+   * 账本
+   * ################################
+   * */
+
+  ///
   BookDao bookDao = BookDao();
 
   /// 账本列表
@@ -37,7 +46,8 @@ class AppService extends ChangeNotifier {
   }
 
   /// 新增/编辑 账本
-  Future<bool> addOrEditBook(BuildContext context, BookModel book, [bool isEdit = false]) async {
+  Future<bool> addOrEditBook(BuildContext context, BookModel book,
+      [bool isEdit = false]) async {
     try {
       isEdit ? await bookDao.edit(book) : await bookDao.add(book);
 
@@ -88,5 +98,50 @@ class AppService extends ChangeNotifier {
     } catch (err) {
       tips(context, '操作异常', Colors.red);
     }
+  }
+
+  /**
+   * ################################
+   * 分类
+   * ################################
+   * */
+
+  ///
+  TypeDao typeDao = TypeDao();
+
+  /// 分类列表
+  List<TypeModel> typeList = [];
+
+  /// 获取分类列表
+  Future getTypes() async {
+    print('getTypes');
+    var list = await typeDao.queryList();
+    typeList = list;
+    print(typeList);
+    notifyListeners();
+  }
+
+  /// 新增/编辑 分类
+  Future<bool> addOrEditType(BuildContext context, TypeModel type,
+      [bool isEdit = false]) async {
+    try {
+      isEdit ? await typeDao.edit(type) : await typeDao.add(type);
+
+      tips(context, isEdit ? '修改完成!' : '添加完成!', Colors.green);
+
+      getTypes();
+
+      return true;
+    } on DatabaseException catch (err) {
+      if (err.isUniqueConstraintError()) {
+        tips(context, '该分类已存在', Colors.red);
+      } else {
+        tips(context, '写入数据失败, code: ${err.getResultCode()}', Colors.red);
+      }
+    } catch (err) {
+      tips(context, '操作异常', Colors.red);
+    }
+
+    return false;
   }
 }

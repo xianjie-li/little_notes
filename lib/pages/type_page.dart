@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:little_notes/models/index.dart';
 import 'package:little_notes/pages/add_type_page.dart';
+import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/circular_image.dart';
+import 'package:provider/provider.dart';
 
 class TypePage extends StatefulWidget {
   static const pathName = 'type';
@@ -13,15 +16,35 @@ class TypePage extends StatefulWidget {
 }
 
 class _TypePageState extends State<TypePage> {
-  void handleAction() async {
+  late AppService appService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    appService = context.read<AppService>();
+    appService.getTypes();
+  }
+
+  void handleAction(TypeModel type) async {
     var actionType = await showDialog(
         context: context,
         builder: (_) {
           return SimpleDialog(
+            contentPadding: EdgeInsets.all(StyleVars.padding),
             children: [
               SimpleDialogOption(
                 onPressed: () {
                   Navigator.pop(context, 1);
+                },
+                child: Text('选择'),
+                padding: EdgeInsets.all(StyleVars.padding),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, 1);
+                  Navigator.pushNamed(context, AddTypePage.pathName,
+                      arguments: type.id);
                 },
                 child: Text('修改'),
                 padding: EdgeInsets.all(StyleVars.padding),
@@ -42,6 +65,9 @@ class _TypePageState extends State<TypePage> {
 
   @override
   Widget build(BuildContext context) {
+    var bookList =
+        context.select<AppService, List<TypeModel>>((state) => state.typeList);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('分类管理'),
@@ -61,18 +87,19 @@ class _TypePageState extends State<TypePage> {
         mainAxisSpacing: 0,
         crossAxisSpacing: 6,
         children: [
-          ...List.generate(
-              200,
-              (index) => Center(
-                    child: GestureDetector(
-                      onTap: handleAction,
-                      child: CircularImage(
-                        icon: '1f6b5-1f3fb-200d-2640-fe0f',
-                        label: '分类$index',
-                        selected: index == 4,
-                      ),
-                    ),
-                  ))
+          ...List.generate(bookList.length, (index) {
+            var currentType = bookList[index];
+            return Center(
+              child: GestureDetector(
+                onTap: () => handleAction(currentType),
+                child: CircularImage(
+                  icon: currentType.icon,
+                  label: currentType.name,
+                  color: Color(int.parse(currentType.color)),
+                ),
+              ),
+            );
+          })
         ],
       ),
     );

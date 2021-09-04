@@ -46,7 +46,7 @@ class CircularImage extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? StyleVars.theme,
         borderRadius: BorderRadius.all(Radius.circular(50)),
-        border: Border.all(color: StyleVars.theme),
+        border: Border.all(color: color ?? StyleVars.theme),
       ),
       child: Center(
         child: Image.asset('lib/assets/twemoji/$icon.png', height: currentSize['width']! - currentSize['diff']!,),

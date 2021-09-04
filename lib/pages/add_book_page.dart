@@ -41,6 +41,7 @@ class _AddBookPageState extends State<AddBookPage> {
   /// 提交账本
   void submit(BookModel? currentBook) async {
     late BookModel eBook;
+    bool success = false;
 
     formValue['updateDate'] = DateHelper.getSinceEpoch();
 
@@ -49,7 +50,7 @@ class _AddBookPageState extends State<AddBookPage> {
 
       eBook = BookModel.fromJson(formValue);
 
-      await appService.addOrEditBook(context, eBook);
+      success = await appService.addOrEditBook(context, eBook);
     } else {
       var fv = Map.of(formValue);
       // 更新时需要去掉这些项
@@ -62,10 +63,10 @@ class _AddBookPageState extends State<AddBookPage> {
         ...fv,
       });
 
-      await appService.addOrEditBook(context, eBook, true);
+      success = await appService.addOrEditBook(context, eBook, true);
     }
 
-    Navigator.pop(context);
+    if (success) Navigator.pop(context);
   }
 
   @override
