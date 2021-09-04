@@ -6,7 +6,7 @@ class TypeModel {
 
   const TypeModel({
     required this.id,
-    required this.parentId,
+    this.parentId,
     required this.icon,
     required this.name,
     required this.color,
@@ -15,7 +15,7 @@ class TypeModel {
   });
 
   final int id;
-  final int parentId;
+  final int? parentId;
   final String icon;
   final String name;
   final String color;
@@ -24,7 +24,7 @@ class TypeModel {
 
   factory TypeModel.fromJson(Map<String,dynamic> json) => TypeModel(
     id: json['id'] as int,
-    parentId: json['parentId'] as int,
+    parentId: json['parentId'] != null ? json['parentId'] as int : null,
     icon: json['icon'] as String,
     name: json['name'] as String,
     color: json['color'] as String,

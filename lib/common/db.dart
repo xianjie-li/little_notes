@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 /// 用于方便的获取客户端Sqlite
 class DB {
   // 每次版本变更都会进行一次数据库初始化, 可以借此来确保数据表存在且为最新版本
-  static const int DBVersion = 6;
+  static const int DBVersion = 10;
 
   /// 为了方便使用，这里假设数据库只在flutter初始化后调用, 应避免在完成装载前使用
   static late final Database db;
@@ -25,7 +25,7 @@ class DB {
 
     final db = await openDatabase(path, version: DB.DBVersion,
         onUpgrade: (Database db, int oldVersion, int newVersion) async {
-          print('update db');
+      print('update db');
 
       await createInitTables(db);
       await patchTables(db);
@@ -34,12 +34,6 @@ class DB {
 
     db
         .rawQuery('SELECT name FROM sqlite_master WHERE type="table"')
-        .then((value) {
-      print(value);
-    });
-
-    db
-        .rawQuery('SELECT name FROM setting')
         .then((value) {
       print(value);
     });
@@ -91,11 +85,10 @@ class DB {
       )
     ''');
 
-
     /* 设置表 */
     await db.execute('''
       CREATE TABLE IF NOT EXISTS ${DB.SETTING}(
-        currentBookId INTEGER                     -- 当前账本
+        currentBookId INTEGER                      -- 当前账本
       )
     ''');
   }
@@ -111,19 +104,8 @@ class DB {
     // patch query 2...
   }
 
-  /// 执行初始化，例如添加默认分类
+  /// 执行初始化操作
   Future init(Database db) async {
-    // var list = await db.rawQuery('SELECT * FROM ${DB.SETTING}');
-    //
-    // // 设置表为空时，表示第一次进入app，为其添加默认数据并执行一些初始化操作
-    // if (list.isEmpty) {
-    //   await db.rawInsert('''
-    //     INSERT INTO
-    //       ${DB.SETTING}
-    //     VALUES(
-    //       null
-    //     )
-    //   ''');
-    // }
+
   }
 }
