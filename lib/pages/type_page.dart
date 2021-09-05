@@ -9,7 +9,14 @@ import 'package:provider/provider.dart';
 class TypePage extends StatefulWidget {
   static const pathName = 'type';
 
-  const TypePage({Key? key}) : super(key: key);
+  /// 开启选择模式，选择后通过路由回传
+  final bool isSelect;
+
+  const TypePage({
+    Key? key,
+    isSelect,
+  })  : this.isSelect = isSelect ?? false,
+        super(key: key);
 
   @override
   _TypePageState createState() => _TypePageState();
@@ -27,7 +34,7 @@ class _TypePageState extends State<TypePage> {
   }
 
   void handleAction(TypeModel type) async {
-    var actionType = await showDialog(
+    await showDialog(
         context: context,
         builder: (_) {
           return SimpleDialog(
@@ -35,14 +42,7 @@ class _TypePageState extends State<TypePage> {
             children: [
               SimpleDialogOption(
                 onPressed: () {
-                  Navigator.pop(context, 1);
-                },
-                child: Text('选择'),
-                padding: EdgeInsets.all(StyleVars.padding),
-              ),
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, 1);
+                  Navigator.pop(context);
                   Navigator.pushNamed(context, AddTypePage.pathName,
                       arguments: type.id);
                 },
@@ -51,7 +51,8 @@ class _TypePageState extends State<TypePage> {
               ),
               SimpleDialogOption(
                 onPressed: () {
-                  Navigator.pop(context, 2);
+                  Navigator.pop(context);
+                  appService.deleteType(context, type);
                 },
                 child: Text('删除', style: TextStyle(color: Colors.red)),
                 padding: EdgeInsets.all(StyleVars.padding),
@@ -59,13 +60,15 @@ class _TypePageState extends State<TypePage> {
             ],
           );
         });
+  }
 
-    print(actionType);
+  void check(TypeModel type) {
+    if (widget.isSelect) Navigator.pop(context, type);
   }
 
   @override
   Widget build(BuildContext context) {
-    var bookList =
+    var typeList =
         context.select<AppService, List<TypeModel>>((state) => state.typeList);
 
     return Scaffold(
@@ -79,19 +82,22 @@ class _TypePageState extends State<TypePage> {
               icon: Icon(Icons.add))
         ],
       ),
-      body: GridView.count(
-        padding: EdgeInsets.symmetric(
-            vertical: StyleVars.padding, horizontal: StyleVars.paddingSM),
-        crossAxisCount: 5,
-        childAspectRatio: 1,
-        mainAxisSpacing: 0,
-        crossAxisSpacing: 6,
-        children: [
-          ...List.generate(bookList.length, (index) {
-            var currentType = bookList[index];
+      body: GridView.builder(
+          itemCount: typeList.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 5,
+            childAspectRatio: 1,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 6,
+          ),
+          padding: EdgeInsets.symmetric(
+              vertical: StyleVars.padding, horizontal: StyleVars.paddingSM),
+          itemBuilder: (context, index) {
+            var currentType = typeList[index];
             return Center(
               child: GestureDetector(
-                onTap: () => handleAction(currentType),
+                onTap: () => check(currentType),
+                onLongPress: () => handleAction(currentType),
                 child: CircularImage(
                   icon: currentType.icon,
                   label: currentType.name,
@@ -99,9 +105,7 @@ class _TypePageState extends State<TypePage> {
                 ),
               ),
             );
-          })
-        ],
-      ),
+          }),
     );
   }
 }

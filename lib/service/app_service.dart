@@ -144,4 +144,30 @@ class AppService extends ChangeNotifier {
 
     return false;
   }
+
+  /// 删除指定类型
+  Future deleteType(BuildContext context, TypeModel type) async {
+    var confirm = await confirmTips(context,
+        ConfirmTip(title: Text('确认删除类型 “${type.name}” 吗?, 删除后无法恢复并且关联的账单会变无分类账单😈。')));
+
+    if (!(confirm is bool) || !confirm) return;
+
+    try {
+      var count = await typeDao.delete(type);
+
+      if (count == 0) {
+        tips(context, '没有找到该分类', Colors.orange);
+      }
+
+      if (count > 0) {
+        tips(context, '删除完成', Colors.green);
+
+        getTypes();
+      }
+    } on DatabaseException catch (err) {
+      tips(context, '数据操作失败, code: ${err.getResultCode()}', Colors.red);
+    } catch (err) {
+      tips(context, '操作异常', Colors.red);
+    }
+  }
 }

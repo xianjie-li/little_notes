@@ -4,7 +4,8 @@ import 'package:little_notes/models/type_model.dart';
 class TypeDao {
   /// 根据id查询指定项
   Future<TypeModel?> query(int id) async {
-    List<Map<String, Object?>> res = await DB.db.rawQuery('SELECT * FROM ${DB.TYPE} where id = $id');
+    List<Map<String, Object?>> res =
+        await DB.db.rawQuery('SELECT * FROM ${DB.TYPE} where id = $id');
     if (res.length == 0) return null;
     var current = res.first;
     return TypeModel.fromJson(current);
@@ -23,14 +24,21 @@ class TypeDao {
       INSERT INTO ${DB.TYPE}
       VALUES(
         null,
-        null,
+        ?,
         ?,
         ?,
         ?,
         ?,
         ?
       );
-    ''', [type.icon, type.name, type.color, type.createDate, type.updateDate]);
+    ''', [
+      type.parentId,
+      type.icon,
+      type.name,
+      type.color,
+      type.createDate,
+      type.updateDate
+    ]);
 
     return id is num;
   }
@@ -58,6 +66,15 @@ class TypeDao {
     ]);
 
     return id is num;
+  }
+
+  /// 删除
+  Future<int> delete(TypeModel book) async {
+    int count = await DB.db.rawDelete('''
+      DELETE FROM ${DB.TYPE} WHERE id = ?
+    ''', [book.id]);
+
+    return count;
   }
 
   /// 批量增加类型

@@ -50,7 +50,7 @@ class BookDao {
     return id is num;
   }
 
-  /// 批量增加类型
+  /// 删除
   Future<int> delete(BookModel book) async {
     int count = await DB.db.rawDelete('''
       DELETE FROM ${DB.BOOK} WHERE id = ?

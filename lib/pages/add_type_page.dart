@@ -6,6 +6,7 @@ import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/color_form_field.dart';
 import 'package:little_notes/widgets/icon_form_field.dart';
+import 'package:little_notes/widgets/type_form_field.dart';
 import 'package:provider/provider.dart';
 
 class AddTypePage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _AddTypePageState extends State<AddTypePage> {
   final _formKey = GlobalKey<FormState>();
   late AppService appService;
   TypeModel? editType;
+  TypeModel? parentType;
 
   final Map<String, dynamic> formValue = {
     'id': 0,
@@ -36,12 +38,23 @@ class _AddTypePageState extends State<AddTypePage> {
 
     appService = context.read<AppService>();
 
+    setEditData();
+  }
+
+  void setEditData() async {
     if (widget.id != null) {
-      appService.typeDao.query(widget.id!).then((value) {
-        setState(() {
-          editType = value;
-        });
+      var value = await appService.typeDao.query(widget.id!);
+
+      setState(() {
+        editType = value;
       });
+
+      if (value!.parentId != null) {
+        var pType = await appService.typeDao.query(value.parentId!);
+        setState(() {
+          parentType = pType;
+        });
+      }
     }
   }
 
@@ -53,7 +66,7 @@ class _AddTypePageState extends State<AddTypePage> {
 
     if (editType == null) {
       formValue['createDate'] = formValue['updateDate'];
-      print(formValue);
+
       eType = TypeModel.fromJson(formValue);
 
       success = await appService.addOrEditType(context, eType);
@@ -65,6 +78,8 @@ class _AddTypePageState extends State<AddTypePage> {
         ...fv,
         "id": widget.id!,
       });
+
+      print(eType.parentId);
 
       success = await appService.addOrEditType(context, eType, true);
     }
@@ -128,14 +143,13 @@ class _AddTypePageState extends State<AddTypePage> {
                       Divider(
                         color: Colors.transparent,
                       ),
-                      /* TODO */
-                      TextFormField(
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          labelText: '父分类',
-                          hintText: '可选，用于生成更细粒度的报表',
-                          border: OutlineInputBorder(),
-                        ),
+                      TypeFormField(
+                        labelText: '父分类',
+                        hintText: '可选，用于生成更细粒度的报表',
+                        initialValue: parentType,
+                        onSaved: (val) {
+                          formValue['parentId'] = val?.id;
+                        },
                       ),
                       Divider(
                         color: Colors.transparent,

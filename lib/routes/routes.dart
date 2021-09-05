@@ -10,7 +10,9 @@ final Map<String, WidgetBuilder> routesMap = {
   HomePage.pathName: (context) => HomePage(),
   AddBookPage.pathName: (context) => AddBookPage(),
   AddNotePage.pathName: (context) => AddNotePage(),
-  TypePage.pathName: (context) => TypePage(),
+  TypePage.pathName: (context) => TypePage(
+    isSelect: ModalRoute.of(context)!.settings.arguments as bool? ?? false,
+  ),
   AddTypePage.pathName: (context) => AddTypePage(
     id: ModalRoute.of(context)!.settings.arguments as int?,
   ),

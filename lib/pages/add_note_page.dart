@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/enums.dart';
 import 'package:little_notes/common/price_calcer.dart';
+import 'package:little_notes/models/index.dart';
+import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/circular_image.dart';
 import 'package:little_notes/widgets/date_picker_form_field.dart';
 import 'package:little_notes/widgets/keyboard.dart';
 import 'package:little_notes/widgets_block/type_list.dart';
+import 'package:provider/provider.dart';
 
 class AddNotePage extends StatefulWidget {
   static const String pathName = 'add_note';
@@ -20,13 +23,22 @@ class _AddNotePageState extends State<AddNotePage> {
   final formKey = GlobalKey<FormState>();
   String value = '+0';
   PriceCalcer priceCalcer = PriceCalcer('+0');
+  late AppService appService;
+
+  BookModel? book;
+  TypeModel? type;
 
   bool keyboardShow = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    appService = context.read<AppService>();
+
+    setState(() {
+      book = appService.currentBook;
+    });
 
     priceCalcer.addListener(() {
       setState(() {
@@ -37,41 +49,36 @@ class _AddNotePageState extends State<AddNotePage> {
 
   @override
   Widget build(BuildContext context) {
+    var books =
+        context.select<AppService, List<BookModel>>((value) => value.bookList);
+
     return Scaffold(
         appBar: AppBar(
           title: Text('记一笔'),
           actions: [
-            PopupMenuButton<String>(
+            PopupMenuButton<BookModel>(
               child: Row(
                 children: [
-                  Text('账本'),
+                  Text(book?.name ?? ''),
                   Icon(Icons.arrow_drop_down),
-                  Divider(indent: StyleVars.padding,),
+                  Divider(
+                    indent: StyleVars.padding,
+                  ),
                 ],
               ),
-              initialValue: '账本1',
-              onSelected: (String result) {
-                print(result);
+              initialValue: book,
+              onSelected: (BookModel result) {
+                setState(() {
+                  book = result;
+                });
               },
               itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem<String>(
-                    value: '账本1',
-                    child: Text('Working a lot harder'),
-                  ),
-                  PopupMenuItem<String>(
-                    value: '账本2',
-                    child: Text('Being a lot smarter'),
-                  ),
-                  PopupMenuItem<String>(
-                    value: '账本3',
-                    child: Text('Being a self-starter'),
-                  ),
-                  PopupMenuItem<String>(
-                    value: '账本4',
-                    child: Text('Placed in charge of trading charter'),
-                  ),
-                ];
+                return books
+                    .map((_book) => PopupMenuItem<BookModel>(
+                          value: _book,
+                          child: Text(_book.name),
+                        ))
+                    .toList();
               },
             )
           ],
@@ -97,9 +104,20 @@ class _AddNotePageState extends State<AddNotePage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircularImage(
-                                  icon: '1f3e6',
-                                  size: SizeEnum.large,
+                                Row(
+                                  children: [
+                                    CircularImage(
+                                      icon: type?.icon ?? '1f5d2',
+                                      size: SizeEnum.large,
+                                      color: type?.color != null
+                                          ? Color(int.parse(type!.color))
+                                          : null,
+                                    ),
+                                    Divider(
+                                      indent: 12,
+                                    ),
+                                    if (type != null) Text(type!.name),
+                                  ],
                                 ),
                                 Text(
                                   value,
@@ -113,7 +131,13 @@ class _AddNotePageState extends State<AddNotePage> {
                             ),
                           ),
                           Divider(),
-                          TypeList(),
+                          TypeList(
+                            onChanged: (_type) {
+                              setState(() {
+                                type = _type;
+                              });
+                            },
+                          ),
                           Divider(),
                           Divider(
                             height: StyleVars.padding,
