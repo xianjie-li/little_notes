@@ -4,8 +4,13 @@ import 'package:little_notes/common/date_helper.dart';
 typedef BuilderFn = Widget Function(String value);
 
 class DatePickerFormField extends StatefulWidget {
+  final String? value;
+  final ValueChanged<String>? onChanged;
+
   const DatePickerFormField({
     Key? key,
+    this.onChanged,
+    this.value,
   }) : super(key: key);
 
   @override
@@ -19,14 +24,13 @@ class _DatePickerState extends State<DatePickerFormField> {
   @override
   void initState() {
     super.initState();
-    textEditingController = TextEditingController(
-      text: DateHelper.getDateTimeString(DateTime.now()),
-    );
+
+    if (widget.onChanged != null)
+      widget.onChanged!(DateHelper.getDateTimeString(DateTime.now()));
   }
 
   @override
   Widget build(BuildContext context) {
-
     return TextFormField(
       controller: textEditingController,
       onSaved: (val) {
@@ -35,27 +39,35 @@ class _DatePickerState extends State<DatePickerFormField> {
       onTap: () async {
         DateTime now = DateTime.now();
 
-        var dateTime = await showDatePicker(
+        var date = await showDatePicker(
           context: context,
           initialDate: now,
           firstDate: DateTime(now.year - 1),
           lastDate: now,
         );
 
-        if (dateTime == null) return;
+        if (date == null) return;
+
+        var time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(hour: now.hour, minute: now.minute));
+
+        if (time != null) {
+          date =
+              DateTime(date.year, date.month, date.day, time.hour, time.minute);
+        }
 
         setState(() {
-          isToday = DateHelper.isSameDay(now, dateTime);
-          textEditingController.text = DateHelper.getDateTimeString(dateTime);
+          isToday = DateHelper.isSameDay(now, date!);
+          textEditingController.text = DateHelper.getDateTimeString(date);
         });
       },
       readOnly: true,
       decoration: InputDecoration(
-        labelText: '时间',
-        hintText: '输入时间',
-        border: OutlineInputBorder(),
-        suffixText: isToday ? '今天' : null
-      ),
+          labelText: '时间',
+          hintText: '输入时间',
+          border: OutlineInputBorder(),
+          suffixText: isToday ? '今天' : null),
     );
   }
 }

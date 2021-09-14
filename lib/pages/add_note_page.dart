@@ -147,7 +147,7 @@ class _AddNotePageState extends State<AddNotePage> {
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               children: [
-                                DatePickerFormField(),
+                                // DatePickerFormField(),
                                 Divider(
                                   color: Colors.transparent,
                                 ),

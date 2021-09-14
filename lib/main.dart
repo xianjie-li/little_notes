@@ -18,18 +18,15 @@ void main() async {
 
   await init();
 
-  runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => AppService()),
-        ],
-        child: App(),
-      )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => AppService()),
+    ],
+    child: App(),
+  ));
 }
 
 class App extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

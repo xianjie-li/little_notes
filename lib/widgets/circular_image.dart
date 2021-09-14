@@ -49,17 +49,27 @@ class CircularImage extends StatelessWidget {
         border: Border.all(color: color ?? StyleVars.theme),
       ),
       child: Center(
-        child: Image.asset('lib/assets/twemoji/$icon.png', height: currentSize['width']! - currentSize['diff']!,),
+        child: Image.asset(
+          'lib/assets/twemoji/$icon.png',
+          height: currentSize['width']! - currentSize['diff']!,
+        ),
       ),
     );
 
-    if (label != null) return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        image,
-        Text(label!, style: TextStyle(color: StyleVars.colorSecond, fontSize: StyleVars.fsSM), maxLines: 1, textAlign: TextAlign.center,)
-      ],
-    );
+    if (label != null)
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          image,
+          Text(
+            label!,
+            style: TextStyle(
+                color: StyleVars.colorSecond, fontSize: StyleVars.fsSM),
+            maxLines: 1,
+            textAlign: TextAlign.center,
+          )
+        ],
+      );
 
     return image;
   }
@@ -74,7 +84,8 @@ class CircularImage extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: StyleVars.paddingSM),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(StyleVars.radius)),
-        border: Border.all(color: selected! ? StyleVars.theme : Colors.transparent, width: 1),
+        border: Border.all(
+            color: selected! ? StyleVars.theme : Colors.transparent, width: 1),
       ),
     );
   }
