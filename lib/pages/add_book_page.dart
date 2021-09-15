@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/date_helper.dart';
 import 'package:little_notes/common/validators.dart';
-import 'package:little_notes/dao/book_dao.dart';
 import 'package:little_notes/models/book_model.dart';
 import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
@@ -71,8 +68,11 @@ class _AddBookPageState extends State<AddBookPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isEdit = ModalRoute.of(context)!.settings.arguments == AddBookPage.editFlag;
-    var currentBook = isEdit ? context.select<AppService, BookModel?>((value) => value.currentBook) : null;
+    bool isEdit =
+        ModalRoute.of(context)!.settings.arguments == AddBookPage.editFlag;
+    var currentBook = isEdit
+        ? context.select<AppService, BookModel?>((value) => value.currentBook)
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -134,25 +134,27 @@ class _AddBookPageState extends State<AddBookPage> {
                     formValue['name'] = val;
                   },
                 ),
-                if (currentBook == null) Divider(
-                  color: Colors.transparent,
-                ),
-                if (currentBook == null) TextFormField(
-                  validator: combineValidator([
-                    notEmptyStringValidatorGetter(),
-                    isNumberValidatorGetter(),
-                  ]),
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: '初始余额',
-                    hintText: '输入账本初始余额',
-                    border: OutlineInputBorder(),
+                if (currentBook == null)
+                  Divider(
+                    color: Colors.transparent,
                   ),
-                  initialValue: currentBook?.balance.toString(),
-                  onSaved: (val) {
-                    formValue['balance'] = double.parse(val!);
-                  },
-                ),
+                if (currentBook == null)
+                  TextFormField(
+                    validator: combineValidator([
+                      notEmptyStringValidatorGetter(),
+                      isNumberValidatorGetter(),
+                    ]),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: '初始余额',
+                      hintText: '输入账本初始余额',
+                      border: OutlineInputBorder(),
+                    ),
+                    initialValue: currentBook?.balance.toString(),
+                    onSaved: (val) {
+                      formValue['balance'] = double.parse(val!);
+                    },
+                  ),
                 Divider(
                   color: Colors.transparent,
                 ),

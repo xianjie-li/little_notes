@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:little_notes/common/builtin_type.dart';
 import 'package:little_notes/common/date_helper.dart';
@@ -11,7 +10,7 @@ Future init() async {
   var settingDao = SettingDao();
   var setting = await settingDao.query();
 
-  // 无设置项时，表示第一次初始化好
+  // 无设置项时，表示第一次初始化
   if (setting == null) {
     await settingDao.init();
 
@@ -20,18 +19,14 @@ Future init() async {
 
     var types = builtInType
         .map<TypeModel>((e) => TypeModel(
-        id: 0,
-        icon: e['icon'] as String,
-        name: e['name'] as String,
-        color: (e['color'] as Color).value.toString(),
-        createDate: now,
-        updateDate: now))
+            id: 0,
+            icon: e['icon'] as String,
+            name: e['name'] as String,
+            color: (e['color'] as Color).value.toString(),
+            createDate: now,
+            updateDate: now))
         .toList();
 
     typeDao.addAll(types);
   }
-
-
-
-
 }

@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:little_notes/common/init.dart';
-import 'package:little_notes/common/builtin_type.dart';
-import 'package:little_notes/common/date_helper.dart';
-import 'package:little_notes/dao/setting_dao.dart';
-import 'package:little_notes/models/index.dart';
 import 'package:little_notes/pages/home_page.dart';
 import 'package:little_notes/routes/routes.dart';
 import 'package:little_notes/common/db.dart';

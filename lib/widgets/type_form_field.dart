@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/models/index.dart';
-import 'package:little_notes/pages/emoji_picker_page.dart';
 import 'package:little_notes/pages/type_page.dart';
-import 'package:little_notes/style/style_vars.dart';
 
 /// 分类选择器
 class TypeFormField extends FormField<TypeModel> {
@@ -48,9 +46,11 @@ class TypeFormField extends FormField<TypeModel> {
                     errorText: field.errorText,
                     hintText: hintText,
                   ),
-                  child: isEmpty ? null : Container(
-                    child: Text(field.value!.name),
-                  ),
+                  child: isEmpty
+                      ? null
+                      : Container(
+                          child: Text(field.value!.name),
+                        ),
                 ),
               );
             });

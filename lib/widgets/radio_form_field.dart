@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:little_notes/pages/emoji_picker_page.dart';
 import 'package:little_notes/style/style_vars.dart';
 
 class RadioFormFieldOption {
