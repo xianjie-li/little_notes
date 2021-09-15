@@ -1,12 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:little_notes/common/common.dart';
+import 'package:little_notes/dto/note_dto.dart';
+import 'package:little_notes/models/index.dart';
 import 'package:little_notes/pages/add_note_page.dart';
 import 'package:little_notes/pages/books_page.dart';
+import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/time_list_item.dart';
 import 'package:little_notes/widgets/time_list_title.dart';
 import 'package:little_notes/widgets_block/home_app_bar.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   static const pathName = 'home';
@@ -18,8 +23,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late AppService appService;
+
+  @override
+  void initState() {
+    super.initState();
+    appService = context.read<AppService>();
+    appService.getLastNotes();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var noteList = context
+        .select<AppService, List<NoteDTO>>((service) => service.lastNoteList);
+
     return Scaffold(
         drawer: Drawer(
           child: BooksPage(),
@@ -41,29 +58,44 @@ class _HomePageState extends State<HomePage> {
           slivers: [
             HomeAppBar(),
             SliverList(
-                delegate: SliverChildListDelegate([
-              TimeListTitle(
-                title: '今天',
-                trailing: '收支:  -251',
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  var current = noteList[index];
+                  var cType = current.type;
+                  // var syb = getSymbleByDiffType(current.noteModelDiffTypeEnum);
+
+                  return TimeListItem(
+                      title: cType?.name ?? '无分类',
+                      subtitle: current.note.remark,
+                      trailing: '${current.note.diffNumber}',
+                      icon: cType?.icon ?? '1faa5');
+                },
+                childCount: noteList.length,
               ),
-              ...List.generate(
-                5,
-                (index) =>
-                    TimeListItem(title: '早餐费用', trailing: '-63', icon: '1f9c1'),
-              ),
-              TimeListTitle(
-                title: '7/12  星期五',
-                trailing: '收支:  -251',
-              ),
-              ...List.generate(
-                50,
-                (index) => TimeListItem(
-                    title: '日用品',
-                    subtitle: '毛巾30、纸巾32、牙刷16、沐浴露79、洗面乳30.',
-                    trailing: '-23',
-                    icon: '1faa5'),
-              ),
-            ])),
+              //     delegate: SliverChildListDelegate([
+              //   TimeListTitle(
+              //     title: '今天${noteList.length}',
+              //     trailing: '收支:  -251',
+              //   ),
+              //   ...List.generate(
+              //     5,
+              //     (index) =>
+              //         TimeListItem(title: '早餐费用', trailing: '-63', icon: '1f9c1'),
+              //   ),
+              //   TimeListTitle(
+              //     title: '7/12  星期五',
+              //     trailing: '收支:  -251',
+              //   ),
+              //   ...List.generate(
+              //     50,
+              //     (index) => TimeListItem(
+              //         title: '日用品',
+              //         subtitle: '毛巾30、纸巾32、牙刷16、沐浴露79、洗面乳30.',
+              //         trailing: '-23',
+              //         icon: '1faa5'),
+              //   ),
+              // ])
+            ),
           ],
         ));
   }

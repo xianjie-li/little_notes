@@ -7,7 +7,7 @@ class NoteModel {
   const NoteModel({
     required this.id,
     required this.bookId,
-    required this.typeId,
+    this.typeId,
     required this.diffType,
     required this.diffNumber,
     required this.remark,
@@ -17,7 +17,7 @@ class NoteModel {
 
   final int id;
   final int bookId;
-  final int typeId;
+  final int? typeId;
   NoteModelDiffTypeEnum get noteModelDiffTypeEnum => _noteModelDiffTypeEnumValues.map[diffType]!;
   final String diffType;
   final double diffNumber;
@@ -28,7 +28,7 @@ class NoteModel {
   factory NoteModel.fromJson(Map<String,dynamic> json) => NoteModel(
     id: json['id'] as int,
     bookId: json['bookId'] as int,
-    typeId: json['typeId'] as int,
+    typeId: json['typeId'] != null ? json['typeId'] as int : null,
     diffType: json['diffType'] as String,
     diffNumber: json['diffNumber'] as double,
     remark: json['remark'] as String,

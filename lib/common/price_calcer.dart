@@ -8,7 +8,8 @@ class PriceCalcer extends ValueNotifier<String> {
   static const String subSignal = '-';
 
   void inputKey(String keycode) {
-    bool isSingle = keycode == PriceCalcer.addSignal || keycode == PriceCalcer.subSignal;
+    bool isSingle =
+        keycode == PriceCalcer.addSignal || keycode == PriceCalcer.subSignal;
 
     if (isSingle) {
       value = value.substring(1, value.length);

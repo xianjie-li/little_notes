@@ -21,6 +21,8 @@ class DB {
 
     final path = join(await getDatabasesPath(), 'note.db');
 
+    // await deleteDatabase(path);
+
     print('DB path: $path');
 
     final db = await openDatabase(path, version: DB.DBVersion,
@@ -63,7 +65,7 @@ class DB {
       CREATE TABLE IF NOT EXISTS ${DB.NOTE}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,      -- 主键
         bookId INTEGER NOT NULL,                   -- 关联的账本id
-        typeId INTEGER NOT NULL,                   -- 关联的类型id
+        typeId INTEGER,                            -- 关联的类型id
         diffType TEXT NOT NULL,                    -- 记录类型
         diffNumber REAL NOT NULL,                  -- 增减值
         remark TEXT,                               -- 备注
@@ -105,7 +107,5 @@ class DB {
   }
 
   /// 执行初始化操作
-  Future init(Database db) async {
-
-  }
+  Future init(Database db) async {}
 }

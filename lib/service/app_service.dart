@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:little_notes/dao/book_dao.dart';
+import 'package:little_notes/dao/note_dao.dart';
 import 'package:little_notes/dao/type_dao.dart';
+import 'package:little_notes/dto/note_dto.dart';
 import 'package:little_notes/models/book_model.dart';
 import 'package:little_notes/models/index.dart';
 import 'package:little_notes/widgets/tips.dart';
@@ -147,8 +149,10 @@ class AppService extends ChangeNotifier {
 
   /// 删除指定类型
   Future deleteType(BuildContext context, TypeModel type) async {
-    var confirm = await confirmTips(context,
-        ConfirmTip(title: Text('确认删除类型 “${type.name}” 吗?, 删除后无法恢复并且关联的账单会变无分类账单😈。')));
+    var confirm = await confirmTips(
+        context,
+        ConfirmTip(
+            title: Text('确认删除类型 “${type.name}” 吗?, 删除后无法恢复并且关联的账单会变无分类账单😈。')));
 
     if (!(confirm is bool) || !confirm) return;
 
@@ -169,5 +173,43 @@ class AppService extends ChangeNotifier {
     } catch (err) {
       tips(context, '操作异常', Colors.red);
     }
+  }
+
+  ///
+  NoteDao noteDao = NoteDao();
+
+  /// 最近50条记录
+  List<NoteDTO> lastNoteList = [];
+
+  /// 新增/编辑 记录
+  Future<bool> addOrEditNote(BuildContext context, NoteModel note,
+      [bool isEdit = false]) async {
+    try {
+      isEdit ? await noteDao.edit(note) : await noteDao.add(note);
+
+      tips(context, isEdit ? '已修改!' : '已提交!', Colors.green);
+
+      // getTypes();
+
+      return true;
+    } on DatabaseException catch (err) {
+      tips(context, '写入数据失败, code: ${err.getResultCode()}', Colors.red);
+    } catch (err) {
+      tips(context, '操作异常', Colors.red);
+    }
+
+    return false;
+  }
+
+  /// 获取并设置 lastNoteList
+  Future getLastNotes() async {
+    print('getLastNotes');
+    var list = await noteDao.queryList('''
+        ORDER BY createDate DESC
+        LIMIT 0, 50
+      ''');
+    lastNoteList = list;
+    print(lastNoteList);
+    notifyListeners();
   }
 }

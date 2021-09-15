@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:little_notes/common/date_helper.dart';
 import 'package:little_notes/common/enums.dart';
 import 'package:little_notes/common/price_calcer.dart';
 import 'package:little_notes/models/index.dart';
@@ -8,6 +9,7 @@ import 'package:little_notes/widgets/circular_image.dart';
 import 'package:little_notes/widgets/date_picker.dart';
 import 'package:little_notes/widgets/date_piker_form_field.dart';
 import 'package:little_notes/widgets/keyboard.dart';
+import 'package:little_notes/widgets/tips.dart';
 import 'package:little_notes/widgets_block/type_list.dart';
 import 'package:provider/provider.dart';
 
@@ -22,14 +24,18 @@ class AddNotePage extends StatefulWidget {
 
 class _AddNotePageState extends State<AddNotePage> {
   final formKey = GlobalKey<FormState>();
-  String value = '+0';
-  PriceCalcer priceCalcer = PriceCalcer('+0');
+  String value = '-0';
+  PriceCalcer priceCalcer = PriceCalcer('-0');
   late AppService appService;
 
   BookModel? book;
   TypeModel? type;
 
   bool keyboardShow = true;
+
+  final Map<String, dynamic> formValue = {
+    "id": 0,
+  };
 
   @override
   void initState() {
@@ -46,6 +52,34 @@ class _AddNotePageState extends State<AddNotePage> {
         value = priceCalcer.value;
       });
     });
+  }
+
+  void submit() async {
+    formKey.currentState?.save();
+    formValue['bookId'] = book!.id;
+
+    var val = priceCalcer.value;
+    var diffNumber = double.parse(val.substring(1));
+    var typeStr = val[0];
+
+    var diffType = typeStr == PriceCalcer.subSignal
+        ? NoteModelDiffTypeEnum.Less.value
+        : NoteModelDiffTypeEnum.Raise.value;
+
+    if (diffNumber == 0) {
+      tips(context, '记录金额不能为0', Colors.orange);
+      return;
+    }
+
+    formValue['diffType'] = diffType;
+    formValue['diffNumber'] = diffNumber;
+
+    var noteModel = NoteModel.fromJson(formValue);
+    var success = await appService.addOrEditNote(context, noteModel);
+
+    print(formValue);
+
+    if (success) Navigator.pop(context);
   }
 
   @override
@@ -117,7 +151,7 @@ class _AddNotePageState extends State<AddNotePage> {
                                     Divider(
                                       indent: 12,
                                     ),
-                                    if (type != null) Text(type!.name),
+                                    Text(type == null ? '无分类' : type!.name)
                                   ],
                                 ),
                                 Text(
@@ -136,6 +170,7 @@ class _AddNotePageState extends State<AddNotePage> {
                             onChanged: (_type) {
                               setState(() {
                                 type = _type;
+                                formValue['typeId'] = _type.id;
                               });
                             },
                           ),
@@ -148,7 +183,15 @@ class _AddNotePageState extends State<AddNotePage> {
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               children: [
-                                DatePickerFormField(),
+                                DatePickerFormField(
+                                  onSaved: (val) {
+                                    formValue['createDate'] =
+                                        DateTime.parse(val!)
+                                            .millisecondsSinceEpoch;
+                                    formValue['updateDate'] =
+                                        formValue['createDate'];
+                                  },
+                                ),
                                 Divider(
                                   color: Colors.transparent,
                                 ),
@@ -161,7 +204,7 @@ class _AddNotePageState extends State<AddNotePage> {
                                   },
                                   child: TextFormField(
                                     onSaved: (val) {
-                                      print('2: $val');
+                                      formValue['remark'] = val;
                                     },
                                     maxLines: 2,
                                     decoration: InputDecoration(
@@ -184,13 +227,11 @@ class _AddNotePageState extends State<AddNotePage> {
                   ),
                   if (keyboardShow)
                     Keyboard(
-                        onKeyInput: priceCalcer.inputKey,
-                        onClear: priceCalcer.clear,
-                        onDelete: priceCalcer.deleteKey,
-                        onSubmit: () {
-                          print('submit');
-                          formKey.currentState?.save();
-                        }),
+                      onKeyInput: priceCalcer.inputKey,
+                      onClear: priceCalcer.clear,
+                      onDelete: priceCalcer.deleteKey,
+                      onSubmit: submit,
+                    )
                 ],
               ),
             )));
