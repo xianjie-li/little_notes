@@ -3,7 +3,7 @@ class DateHelper {
     var year = dateTime.year.toString();
     var month = dateTime.month.toString().padLeft(2, '0');
     var day = dateTime.day.toString().padLeft(2, '0');
-    var hour = dateTime.hour.toString();
+    var hour = dateTime.hour.toString().padLeft(2, '0');
     var minute = dateTime.minute.toString().padLeft(2, '0');
     var second = dateTime.second.toString().padLeft(2, '0');
 

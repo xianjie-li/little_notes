@@ -5,6 +5,8 @@ import 'package:little_notes/models/index.dart';
 import 'package:little_notes/service/app_service.dart';
 import 'package:little_notes/style/style_vars.dart';
 import 'package:little_notes/widgets/circular_image.dart';
+import 'package:little_notes/widgets/date_picker.dart';
+import 'package:little_notes/widgets/date_piker_form_field.dart';
 import 'package:little_notes/widgets/keyboard.dart';
 import 'package:little_notes/widgets_block/type_list.dart';
 import 'package:provider/provider.dart';
@@ -146,7 +148,7 @@ class _AddNotePageState extends State<AddNotePage> {
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Column(
                               children: [
-                                // DatePickerFormField(),
+                                DatePickerFormField(),
                                 Divider(
                                   color: Colors.transparent,
                                 ),
