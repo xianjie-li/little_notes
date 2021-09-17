@@ -6,6 +6,7 @@ import 'package:little_notes/widgets/circular_image.dart';
 class TimeListItem extends StatelessWidget {
   final String title;
   final String trailing;
+  final Color? trailingColor;
   final String icon;
   final String? subtitle;
 
@@ -13,6 +14,7 @@ class TimeListItem extends StatelessWidget {
     Key? key,
     required this.title,
     this.subtitle,
+    this.trailingColor = StyleVars.theme,
     required this.trailing,
     required this.icon,
   }) : super(key: key);
@@ -26,9 +28,16 @@ class TimeListItem extends StatelessWidget {
       ),
       title: Text(title),
       subtitle: subtitle == null ? null : Text(subtitle!),
-      trailing: Text(trailing, style: TextStyle(color: StyleVars.theme, fontSize: StyleVars.fsLG, fontWeight: FontWeight.w600),),
+      trailing: Text(
+        trailing,
+        style: TextStyle(
+            color: trailingColor,
+            fontSize: StyleVars.fsLG,
+            fontWeight: FontWeight.w600),
+      ),
       // visualDensity: VisualDensity.compact,
-      contentPadding: EdgeInsets.symmetric(horizontal: StyleVars.padding, vertical: 2),
+      contentPadding:
+          EdgeInsets.symmetric(horizontal: StyleVars.padding, vertical: 2),
     );
   }
 }

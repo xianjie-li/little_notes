@@ -37,12 +37,14 @@ class NoteDao {
             b.createDate `b.createDate`,
             b.updateDate `b.updateDate`
           FROM 
-            ${DB.NOTE} n,
-            ${DB.TYPE} t,
-            ${DB.BOOK} b
-          WHERE 
+            ${DB.NOTE} n
+          LEFT JOIN
+            ${DB.TYPE} t
+          ON
             n.typeId = t.id
-          AND
+          LEFT JOIN
+            ${DB.BOOK} b
+          ON
             n.bookId = b.id
           ${condition == null ? "" : " $condition"}
         ''', arguments);

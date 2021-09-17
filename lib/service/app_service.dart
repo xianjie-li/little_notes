@@ -178,8 +178,11 @@ class AppService extends ChangeNotifier {
   ///
   NoteDao noteDao = NoteDao();
 
-  /// 最近50条记录
+  /// 最近LAST_NOTE_NUM + 1条记录, 额外的一条用于检测是否有超过50条数据
   List<NoteDTO> lastNoteList = [];
+
+  /// 要查询的最近note记录数量
+  static const int LAST_NOTE_NUM = 50;
 
   /// 新增/编辑 记录
   Future<bool> addOrEditNote(BuildContext context, NoteModel note,
@@ -204,11 +207,10 @@ class AppService extends ChangeNotifier {
   /// 获取并设置 lastNoteList
   Future getLastNotes() async {
     print('getLastNotes');
-    var list = await noteDao.queryList('''
+    lastNoteList = await noteDao.queryList('''
         ORDER BY createDate DESC
-        LIMIT 0, 50
+        LIMIT 0, ${AppService.LAST_NOTE_NUM + 1}
       ''');
-    lastNoteList = list;
     print(lastNoteList);
     notifyListeners();
   }
