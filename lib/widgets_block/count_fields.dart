@@ -1,9 +1,14 @@
-
 import 'package:flutter/material.dart';
+import 'package:little_notes/common/common.dart';
+import 'package:little_notes/models/index.dart';
 import 'package:little_notes/widgets/label_value.dart';
 
 class CountFields extends StatelessWidget {
-  const CountFields({Key? key}) : super(key: key);
+  final Map<String, double> monthCounts;
+  final BookModelFocusEnum type;
+
+  const CountFields({Key? key, required this.monthCounts, required this.type})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,23 +16,24 @@ class CountFields extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabelValue(
-          label: '月预算',
-          value: '864',
-          unit: '元',
+          label: '账本月',
+          value: removeDecimalZeroFormat(monthCounts["month"]!),
+          unit: '月',
         ),
-        LabelValue(
-          label: '日预算',
-          value: '30',
-          unit: '元',
-        ),
+        if (type == BookModelFocusEnum.Budget)
+          LabelValue(
+            label: '日预算',
+            value: removeDecimalZeroFormat(monthCounts["dayBudget"]!),
+            unit: '元',
+          ),
         LabelValue(
           label: '月收入',
-          value: '150',
+          value: removeDecimalZeroFormat(monthCounts["monthIn"]!),
           unit: '元',
         ),
         LabelValue(
           label: '月支出',
-          value: '274',
+          value: removeDecimalZeroFormat(monthCounts["monthOut"]!),
           unit: '元',
         ),
       ],

@@ -13,11 +13,6 @@ import 'package:sqflite/sqflite.dart';
 // 当对dao进行单次操作时，可以直接在组件层进行操作
 // dao为数据存储层，对底层数据进行实际操作
 class AppService extends ChangeNotifier {
-  AppService() {
-    // 初始化时查出当前笔记列表
-    getBooks();
-  }
-
   /**
    * ################################
    * 账本
@@ -36,14 +31,37 @@ class AppService extends ChangeNotifier {
   /// 设置当前账本
   void setCurrentBook(BookModel book) {
     currentBook = book;
-    notifyListeners();
+
+    syncDatas();
   }
 
-  /// 获取账本列表
-  Future getBooks() async {
+  /// 更新应用的主要数据
+  /// 1. 会同时执行以下操作，更新已选中账本
+  /// 2. 获取最近记录列表
+  /// 3. 已选择账本时，更新该账本
+  /// 2. 如果没有选择账本，选择列表中第一项
+  /// 3. 计算统计项
+  Future syncDatas() async {
     print('getBooks');
-    var list = await bookDao.queryList();
-    bookList = list;
+    bookList = await bookDao.queryList();
+
+    // 更新当前账本
+    if (bookList.length > 0 && currentBook != null) {
+      var nCurrentInd =
+          bookList.indexWhere((element) => element.id == currentBook!.id);
+
+      currentBook = nCurrentInd == -1 ? null : bookList[nCurrentInd];
+    }
+
+    // 如果未选择账本，则自动选择
+    if (bookList.length > 0 && currentBook == null) {
+      currentBook = bookList.first;
+    }
+
+    await getLastNotes();
+
+    await getMonthCounts();
+
     notifyListeners();
   }
 
@@ -55,7 +73,7 @@ class AppService extends ChangeNotifier {
 
       tips(context, isEdit ? '修改完成!' : '添加完成!', Colors.green);
 
-      getBooks();
+      syncDatas();
 
       return true;
     } on DatabaseException catch (err) {
@@ -93,7 +111,7 @@ class AppService extends ChangeNotifier {
           currentBook = null;
         }
 
-        getBooks();
+        syncDatas();
       }
     } on DatabaseException catch (err) {
       tips(context, '数据操作失败, code: ${err.getResultCode()}', Colors.red);
@@ -181,6 +199,19 @@ class AppService extends ChangeNotifier {
   /// 最近LAST_NOTE_NUM + 1条记录, 额外的一条用于检测是否有超过50条数据
   List<NoteDTO> lastNoteList = [];
 
+  /// 本月记录
+  List<NoteDTO> monthNoteList = [];
+
+  /// 本月的统计信息
+  Map<String, double> monthCounts = {
+    "month": 0, // 账本月
+    "balance": 0, // 余额
+    "monthBudget": 0, // 月预算
+    "dayBudget": 0, // 日预算
+    "monthIn": 0, // 月入
+    "monthOut": 0, // 月出
+  };
+
   /// 要查询的最近note记录数量
   static const int LAST_NOTE_NUM = 50;
 
@@ -188,11 +219,29 @@ class AppService extends ChangeNotifier {
   Future<bool> addOrEditNote(BuildContext context, NoteModel note,
       [bool isEdit = false]) async {
     try {
+      // 查询关联账本的最新信息
+      var book = await bookDao.query(note.bookId) as BookModel;
+
+      if (isEdit) {
+        // TODO: 修改逻辑正确性测试
+        // 查询关联记录的历史信息
+        var oldNote = await noteDao.query(note.id) as NoteModel;
+        // 计算两次记录的前后差异值
+        var diff = note.diffNumber - oldNote.diffNumber;
+
+        book = book.copyWith(balance: book.balance + diff);
+      } else {
+        book = book.copyWith(balance: book.balance + note.diffNumber);
+      }
+
       isEdit ? await noteDao.edit(note) : await noteDao.add(note);
 
-      tips(context, isEdit ? '已修改!' : '已提交!', Colors.green);
+      // 更新book记录
+      await bookDao.edit(book);
+      // 更新账本列表
+      await syncDatas();
 
-      // getTypes();
+      tips(context, isEdit ? '已修改!' : '已提交!', Colors.green);
 
       return true;
     } on DatabaseException catch (err) {
@@ -207,11 +256,68 @@ class AppService extends ChangeNotifier {
   /// 获取并设置 lastNoteList
   Future getLastNotes() async {
     print('getLastNotes');
+
+    if (currentBook == null) return [];
+
     lastNoteList = await noteDao.queryList('''
+        WHERE
+          b.id = ${currentBook!.id}
         ORDER BY createDate DESC
         LIMIT 0, ${AppService.LAST_NOTE_NUM + 1}
       ''');
     print(lastNoteList);
+    notifyListeners();
+  }
+
+  /// 获取并设置monthNoteList
+  Future getMonthCounts() async {
+    print('getMonthCounts');
+
+    if (currentBook == null) return monthCounts;
+
+    var now = DateTime.now();
+    var start = DateTime(now.year, now.month, 1, 0, 0, 0);
+    var end = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
+    // 本月剩余的天数
+    var remainDay = end.day - now.day;
+
+    monthNoteList = await noteDao.queryList('''
+        WHERE
+          b.id = ${currentBook!.id}
+        AND
+          n.createDate >= ${start.millisecondsSinceEpoch}
+        AND
+          n.createDate <= ${end.millisecondsSinceEpoch}
+        ORDER BY createDate DESC
+      ''');
+
+    monthCounts['month'] = now.month.toDouble();
+    monthCounts['balance'] = currentBook!.balance;
+    monthCounts['monthBudget'] = currentBook!.budget;
+    monthCounts['dayBudget'] = 0;
+    monthCounts['monthIn'] = 0;
+    monthCounts['monthOut'] = 0;
+
+    monthNoteList.forEach((noteDTO) {
+      var note = noteDTO.note;
+      var diffNumber = note.diffNumber;
+
+      // 余额增加不影响预算
+      if (diffNumber < 0) {
+        monthCounts['monthBudget'] =
+            monthCounts['monthBudget']! + note.diffNumber;
+        monthCounts['monthOut'] = monthCounts['monthOut']! + diffNumber.abs();
+      } else {
+        monthCounts['monthIn'] = monthCounts['monthIn']! + diffNumber;
+      }
+    });
+
+    monthCounts['dayBudget'] = monthCounts['monthBudget']! / remainDay;
+
+    monthCounts = {...monthCounts};
+
+    print(monthCounts);
+
     notifyListeners();
   }
 }

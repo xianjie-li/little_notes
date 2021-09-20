@@ -2,7 +2,6 @@
   "id": 0,
   "bookId": 0,
   "typeId?": 0,
-  "diffType":"@enum:raise,less",
   "diffNumber": 0.0,
   "remark": "string",
   "createDate": 0,

@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 /// 用于方便的获取客户端Sqlite
 class DB {
   // 每次版本变更都会进行一次数据库初始化, 可以借此来确保数据表存在且为最新版本
-  static const int DBVersion = 10;
+  static const int DBVersion = 1;
 
   /// 为了方便使用，这里假设数据库只在flutter初始化后调用, 应避免在完成装载前使用
   static late final Database db;
@@ -66,7 +66,6 @@ class DB {
         id INTEGER PRIMARY KEY AUTOINCREMENT,      -- 主键
         bookId INTEGER NOT NULL,                   -- 关联的账本id
         typeId INTEGER,                            -- 关联的类型id
-        diffType TEXT NOT NULL,                    -- 记录类型
         diffNumber REAL NOT NULL,                  -- 增减值
         remark TEXT,                               -- 备注
         createDate INTEGER NOT NULL,               -- 创建时间

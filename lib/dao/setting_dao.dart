@@ -3,7 +3,8 @@ import 'package:little_notes/models/index.dart';
 
 class SettingDao {
   Future<SettingModel?> query() async {
-    List<Map<String, Object?>> res = await DB.db.rawQuery('SELECT currentBookId FROM ${DB.SETTING}');
+    List<Map<String, Object?>> res =
+        await DB.db.rawQuery('SELECT currentBookId FROM ${DB.SETTING}');
     SettingModel? setting;
 
     if (res.isNotEmpty) {
@@ -23,6 +24,8 @@ class SettingDao {
   }
 
   Future init() async {
+    DateTime now = DateTime.now();
+
     await DB.db.rawInsert('''
       INSERT INTO
         ${DB.SETTING}

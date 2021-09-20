@@ -3,7 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Wallet extends StatelessWidget {
-  const Wallet({Key? key}) : super(key: key);
+  final String label;
+  final String value;
+
+  const Wallet({Key? key, required this.label, required this.value})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +27,10 @@ class Wallet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '预算 ',
+                    '$label ',
                     style: TextStyle(color: Colors.white70),
                   ),
-                  Text('￥592551',
+                  Text('￥$value',
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,

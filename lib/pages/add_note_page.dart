@@ -58,20 +58,13 @@ class _AddNotePageState extends State<AddNotePage> {
     formKey.currentState?.save();
     formValue['bookId'] = book!.id;
 
-    var val = priceCalcer.value;
-    var diffNumber = double.parse(val.substring(1));
-    var typeStr = val[0];
-
-    var diffType = typeStr == PriceCalcer.subSignal
-        ? NoteModelDiffTypeEnum.Less.value
-        : NoteModelDiffTypeEnum.Raise.value;
+    var diffNumber = double.parse(priceCalcer.value);
 
     if (diffNumber == 0) {
       tips(context, '记录金额不能为0', Colors.orange);
       return;
     }
 
-    formValue['diffType'] = diffType;
     formValue['diffNumber'] = diffNumber;
 
     var noteModel = NoteModel.fromJson(formValue);

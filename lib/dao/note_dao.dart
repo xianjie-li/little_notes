@@ -49,6 +49,8 @@ class NoteDao {
           ${condition == null ? "" : " $condition"}
         ''', arguments);
 
+    print(res.length);
+
     return res.map((r) {
       NoteModel note = NoteModel.fromJson(r);
       TypeModel? type = note.typeId == null
@@ -71,13 +73,11 @@ class NoteDao {
         ?,
         ?,
         ?,
-        ?,
         ?
       );
     ''', [
       note.bookId,
       note.typeId,
-      note.diffType,
       note.diffNumber,
       note.remark,
       note.createDate,
@@ -95,7 +95,6 @@ class NoteDao {
       SET
         bookId = ?,
         typeId = ?,
-        diffType = ?,
         diffNumber = ?,
         remark = ?
         createDate = ?
@@ -105,7 +104,6 @@ class NoteDao {
     ''', [
       note.bookId,
       note.typeId,
-      note.diffType,
       note.diffNumber,
       note.remark,
       note.createDate,

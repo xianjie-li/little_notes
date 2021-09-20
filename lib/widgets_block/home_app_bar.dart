@@ -14,12 +14,9 @@ class HomeAppBar extends StatefulWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  late AppService appService;
-
   @override
   void initState() {
     super.initState();
-    appService = context.read<AppService>();
   }
 
   @override

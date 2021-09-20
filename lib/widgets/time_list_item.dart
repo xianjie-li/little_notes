@@ -7,6 +7,7 @@ class TimeListItem extends StatelessWidget {
   final String title;
   final String trailing;
   final Color? trailingColor;
+  final Color? iconColor;
   final String icon;
   final String? subtitle;
 
@@ -15,6 +16,7 @@ class TimeListItem extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailingColor = StyleVars.theme,
+    this.iconColor = StyleVars.theme,
     required this.trailing,
     required this.icon,
   }) : super(key: key);
@@ -25,6 +27,7 @@ class TimeListItem extends StatelessWidget {
       onLongPress: () {},
       leading: CircularImage(
         icon: icon,
+        color: iconColor,
       ),
       title: Text(title),
       subtitle: subtitle == null ? null : Text(subtitle!),
